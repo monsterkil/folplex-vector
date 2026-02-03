@@ -1,4 +1,4 @@
-export default function Header({ onNewProject, editingProject }) {
+export default function Header({ user, onLogout, onNewProject, editingProject }) {
   return (
     <header className="border-b border-steel-800 bg-steel-900/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -31,6 +31,9 @@ export default function Header({ onNewProject, editingProject }) {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
+            <span className="text-xs text-steel-400 hidden sm:inline">
+              Zalogowany: <span className="text-folplex-400 font-medium">{user?.role}</span>
+            </span>
             <button
               onClick={onNewProject}
               className="btn btn-ghost text-sm"
@@ -39,6 +42,17 @@ export default function Header({ onNewProject, editingProject }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Nowy
+            </button>
+            <div className="h-6 w-px bg-steel-700" />
+            <button
+              onClick={onLogout}
+              className="btn btn-ghost text-sm text-steel-400 hover:text-steel-200"
+              title="Wyloguj"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Wyloguj
             </button>
             <div className="h-6 w-px bg-steel-700" />
             <span className="text-xs text-steel-500 hidden sm:block">

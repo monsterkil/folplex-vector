@@ -6,6 +6,9 @@ import ExportButtons from './components/ExportButtons'
 import ProjectList from './components/ProjectList'
 import Header from './components/Header'
 import SaveProjectModal from './components/SaveProjectModal'
+import LoginScreen from './components/LoginScreen'
+
+const AUTH_KEY = 'folplex_user'
 
 const defaultShape = {
   type: 'rectangle',
@@ -15,13 +18,34 @@ const defaultShape = {
   isSquare: false
 }
 
+function getStoredUser() {
+  try {
+    const raw = localStorage.getItem(AUTH_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
 export default function App() {
+  const [user, setUser] = useState(getStoredUser)
   const [shape, setShape] = useState(defaultShape)
   const [showGrid, setShowGrid] = useState(true)
   const [projects, setProjects] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [editingProject, setEditingProject] = useState(null)
+
+  const handleLogin = (userData) => {
+    setUser(userData)
+    localStorage.setItem(AUTH_KEY, JSON.stringify(userData))
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.removeItem(AUTH_KEY)
+    toast.success('Wylogowano')
+  }
 
   // Fetch projects on mount
   useEffect(() => {
@@ -111,6 +135,22 @@ export default function App() {
     toast.success('Nowy projekt')
   }
 
+  if (!user) {
+    return (
+      <>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            className: 'bg-steel-800 text-steel-100 border border-steel-700',
+            duration: 3000,
+            style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' }
+          }}
+        />
+        <LoginScreen onLogin={handleLogin} />
+      </>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-steel-950 noise-overlay">
       <Toaster 
@@ -127,6 +167,8 @@ export default function App() {
       />
       
       <Header 
+        user={user}
+        onLogout={handleLogout}
         onNewProject={handleNewProject}
         editingProject={editingProject}
       />
