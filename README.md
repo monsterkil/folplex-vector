@@ -2,6 +2,8 @@
 
 Generator plików wektorowych SVG i PDF dla frezarek CNC.
 
+**Repozytorium:** [github.com/monsterkil/folplex-vector](https://github.com/monsterkil/folplex-vector)
+
 ![Folplex Vector](https://img.shields.io/badge/CNC-Vector%20Generator-22c55e)
 
 ## Funkcje
@@ -46,6 +48,17 @@ npm run dev
 ```
 
 ## Deployment na Vercel
+
+**Opcja A – przez Vercel Dashboard (najprostsza):**
+
+1. Wejdź na [vercel.com](https://vercel.com) i zaloguj się.
+2. **Add New** → **Project** → **Import Git Repository**.
+3. Wybierz **monsterkil/folplex-vector** (lub podłącz swoje konto GitHub i wybierz to repo).
+4. W **Environment Variables** dodaj `DATABASE_URL` (PostgreSQL – np. Vercel Postgres, Supabase, Neon).
+5. Kliknij **Deploy**. Vercel zbuduje i wdroży projekt.
+6. Po wdrożeniu: w projekcie Vercel → **Storage** utwórz bazę Postgres (jeśli jej nie masz), skopiuj `DATABASE_URL` do zmiennych, następnie w **Settings** → **Functions** możesz uruchomić ponowny deploy, żeby migracje Prisma się wykonały (lub uruchom lokalnie `npx prisma db push` z tym samym `DATABASE_URL`).
+
+**Opcja B – przez Vercel CLI:**
 
 ### 1. Przygotuj bazę danych
 
