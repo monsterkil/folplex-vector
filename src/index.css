@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --grid-color: rgba(34, 197, 94, 0.15);
+  --grid-color-strong: rgba(34, 197, 94, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-steel-950 text-steel-100 antialiased;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-steel-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-steel-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-steel-600;
+}
+
+/* Input styles */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(34, 197, 94, 0.2);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Grid pattern for canvas */
+.grid-pattern {
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(var(--grid-color-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color-strong) 1px, transparent 1px);
+  background-size:
+    10px 10px,
+    10px 10px,
+    50px 50px,
+    50px 50px;
+}
+
+/* Noise texture overlay */
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Button base */
+.btn {
+  @apply px-4 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
+}
+
+.btn-primary {
+  @apply bg-folplex-600 text-white hover:bg-folplex-500 active:bg-folplex-700;
+  @apply shadow-lg shadow-folplex-600/20 hover:shadow-xl hover:shadow-folplex-500/30;
+}
+
+.btn-secondary {
+  @apply bg-steel-800 text-steel-200 hover:bg-steel-700 border border-steel-700;
+}
+
+.btn-ghost {
+  @apply text-steel-400 hover:text-steel-200 hover:bg-steel-800/50;
+}
+
+/* Card style */
+.card {
+  @apply bg-steel-900/80 backdrop-blur-sm border border-steel-800 rounded-xl;
+}
+
+/* Input style */
+.input-field {
+  @apply w-full bg-steel-800 border border-steel-700 rounded-lg px-4 py-2.5;
+  @apply text-steel-100 placeholder-steel-500;
+  @apply focus:outline-none focus:border-folplex-500 focus:ring-2 focus:ring-folplex-500/20;
+  @apply transition-all duration-200;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Label */
+.input-label {
+  @apply block text-sm font-medium text-steel-400 mb-1.5;
+}
+
+/* Badge */
+.badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+}
+
+.badge-green {
+  @apply bg-folplex-900/50 text-folplex-400 border border-folplex-800;
+}
