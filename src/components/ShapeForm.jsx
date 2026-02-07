@@ -188,7 +188,7 @@ export default function ShapeForm({ shape, setShape }) {
       {isRectOrSquare && (
         <div className="p-3 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-3">
           <div className="flex items-center justify-between">
-            <label className="input-label mb-0">Otwory (np. do zawieszenia)</label>
+            <label className="input-label mb-0">Otwory</label>
             <button
               type="button"
               onClick={() => handleHolesChange('enabled', !holes.enabled)}
