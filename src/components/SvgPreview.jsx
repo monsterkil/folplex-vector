@@ -43,7 +43,7 @@ export default function SvgPreview({ shape, showGrid }) {
   const hasHoles = (shape.holes?.enabled && shape.holes?.count) && (type === 'rectangle' || type === 'square')
 
   return (
-    <div className="relative w-full aspect-[4/3] bg-steel-800/30 rounded-lg overflow-hidden border border-steel-700/50">
+    <div className="relative w-full aspect-[4/3] bg-steel-800/30 rounded-lg overflow-hidden">
       <svg
         viewBox={`${-padding} ${-padding} ${viewBoxWidth} ${viewBoxHeight}`}
         className="w-full h-full"
