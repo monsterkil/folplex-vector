@@ -21,7 +21,7 @@ export default function ShapeForm({ shape, setShape }) {
         base.holes = prev.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
       } else {
         base.width = prev.width || 20
-        base.height = prev.height || 15
+        base.height = prev.type === 'square' ? (prev.width * 0.75 || 15) : (prev.height || 15)
         base.holes = prev.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
       }
       return base
