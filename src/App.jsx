@@ -179,12 +179,6 @@ export default function App() {
           {/* Left Panel - Form */}
           <div className="lg:col-span-3 space-y-6">
             <div className="card p-6 animate-fade-in">
-              <h2 className="text-lg font-semibold text-steel-200 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-                Wymiary kształtu
-              </h2>
               <ShapeForm shape={shape} setShape={setShape} />
             </div>
 
