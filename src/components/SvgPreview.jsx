@@ -49,7 +49,7 @@ export default function SvgPreview({ shape, showGrid }) {
         className="w-full h-full"
         preserveAspectRatio="xMidYMid meet"
       >
-        <rect x={-padding} y={-padding} width={viewBoxWidth} height={viewBoxHeight} fill="#0f172a" />
+        <rect x={-padding} y={-padding} width={viewBoxWidth} height={viewBoxHeight} fill="#101115" />
 
         {showGrid && (
           <g>
