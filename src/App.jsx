@@ -219,7 +219,7 @@ export default function App() {
           <div className="lg:col-span-7">
             <div className="card p-6 h-full animate-fade-in" style={{ animationDelay: '0.15s' }}>
               <SvgPreview shape={shape} showGrid={showGrid} />
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-steel-800">
+              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-steel-800">
                 <span className="text-steel-300 text-sm">Pokaż siatkę</span>
                 <button
                   onClick={() => setShowGrid(!showGrid)}
