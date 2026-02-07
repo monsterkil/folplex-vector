@@ -57,7 +57,8 @@ export async function exportToPdf(shape, filename) {
   )
 
   pdf.setDrawColor(0, 0, 0)
-  pdf.setLineWidth(0.3)
+  const strokeWidthMm = (shape.strokeWidth ?? 0.1) * 10
+  pdf.setLineWidth(strokeWidthMm * scale)
 
   if (type === 'circle') {
     const cx = offsetX + scaledWidth / 2

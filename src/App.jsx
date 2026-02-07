@@ -16,7 +16,8 @@ const defaultShape = {
   height: 15,
   cornerRadius: 0,
   holes: { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 },
-  nrZk: ''
+  nrZk: '',
+  strokeWidth: 0.1
 }
 
 function getStoredUser() {
@@ -200,7 +201,18 @@ export default function App() {
                   value={shape.nrZk ?? ''}
                   onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
                 />
-                <p className="text-xs text-steel-500 mt-1">Puste = automatyczna nazwa (wymiary)</p>
+              </div>
+              <div className="mb-4">
+                <label className="input-label">Grubość obrysu (cm)</label>
+                <input
+                  type="number"
+                  className="input-field max-w-[180px]"
+                  min="0.01"
+                  max="2"
+                  step="0.01"
+                  value={shape.strokeWidth ?? 0.1}
+                  onChange={(e) => setShape(prev => ({ ...prev, strokeWidth: Math.max(0.01, Math.min(2, parseFloat(e.target.value) || 0.1)) }))}
+                />
               </div>
               <ExportButtons shape={shape} />
             </div>

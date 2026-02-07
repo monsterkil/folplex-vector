@@ -115,15 +115,16 @@ export function generateSvgFile(shape) {
   const width = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
   const height = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
   const { main, holePaths } = generateSvgPath(shape)
+  const strokeW = shape.strokeWidth ?? 0.1
 
   const widthMm = width * 10
   const heightMm = height * 10
 
   const pathEls = [
-    `<path d="${main}" fill="none" stroke="#000000" stroke-width="0.1" stroke-linecap="round" stroke-linejoin="round"/>`
+    `<path d="${main}" fill="none" stroke="#000000" stroke-width="${strokeW}" stroke-linecap="round" stroke-linejoin="round"/>`
   ]
   holePaths.forEach(d => {
-    pathEls.push(`<path d="${d}" fill="none" stroke="#000000" stroke-width="0.1" stroke-linecap="round" stroke-linejoin="round"/>`)
+    pathEls.push(`<path d="${d}" fill="none" stroke="#000000" stroke-width="${strokeW}" stroke-linecap="round" stroke-linejoin="round"/>`)
   })
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -154,6 +155,7 @@ export function generateSvgElement(shape) {
   const width = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
   const height = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
   const { main, holePaths } = generateSvgPath(shape)
+  const strokeW = shape.strokeWidth ?? 0.1
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
@@ -165,7 +167,7 @@ export function generateSvgElement(shape) {
   path.setAttribute('d', main)
   path.setAttribute('fill', 'none')
   path.setAttribute('stroke', '#000000')
-  path.setAttribute('stroke-width', '0.1')
+  path.setAttribute('stroke-width', String(strokeW))
   path.setAttribute('stroke-linecap', 'round')
   path.setAttribute('stroke-linejoin', 'round')
   svg.appendChild(path)
@@ -175,7 +177,7 @@ export function generateSvgElement(shape) {
     p.setAttribute('d', d)
     p.setAttribute('fill', 'none')
     p.setAttribute('stroke', '#000000')
-    p.setAttribute('stroke-width', '0.1')
+    p.setAttribute('stroke-width', String(strokeW))
     p.setAttribute('stroke-linecap', 'round')
     p.setAttribute('stroke-linejoin', 'round')
     svg.appendChild(p)

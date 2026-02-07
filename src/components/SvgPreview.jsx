@@ -37,7 +37,7 @@ export default function SvgPreview({ shape, showGrid }) {
 
   const fontSize = Math.max(viewBoxWidth, viewBoxHeight) * 0.04
   const arrowSize = fontSize * 0.5
-  const strokeW = viewBoxWidth * 0.005
+  const strokeW = shape.strokeWidth ?? 0.1
 
   const typeLabel = type === 'circle' ? 'Koło' : type === 'ellipse' ? 'Elipsa' : type === 'square' ? 'Kwadrat' : 'Prostokąt'
   const hasHoles = (shape.holes?.enabled && shape.holes?.count) && (type === 'rectangle' || type === 'square')
