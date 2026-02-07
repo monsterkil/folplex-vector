@@ -1,6 +1,13 @@
 import { jsPDF } from 'jspdf'
 import { generateSvgPath, getHolePositions } from './generateSvg'
 
+/** Zamiana polskich znaków na ASCII – domyślna czcionka jsPDF ich nie obsługuje */
+function pdfText(str) {
+  if (typeof str !== 'string') return str
+  const map = { ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z', Ą: 'A', Ć: 'C', Ę: 'E', Ł: 'L', Ń: 'N', Ó: 'O', Ś: 'S', Ź: 'Z', Ż: 'Z' }
+  return str.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, c => map[c] ?? c)
+}
+
 /**
  * Export shape to PDF (A4 format)
  * @param {Object} shape - Shape configuration
@@ -38,13 +45,13 @@ export async function exportToPdf(shape, filename) {
 
   pdf.setFontSize(14)
   pdf.setTextColor(0, 0, 0)
-  pdf.text('Folplex Vector', margin, margin)
+  pdf.text(pdfText('Folplex Vector'), margin, margin)
 
   pdf.setFontSize(10)
   pdf.setTextColor(100, 100, 100)
-  const typeLabel = type === 'circle' ? 'Koło' : type === 'ellipse' ? 'Elipsa' : 'Prostokąt'
+  const typeLabel = type === 'circle' ? 'Koło' : type === 'ellipse' ? 'Elipsa' : type === 'square' ? 'Kwadrat' : 'Prostokąt'
   pdf.text(
-    `${typeLabel} | ${width} × ${height} cm${cornerRadius > 0 ? ` | Zaokrąglenie: ${cornerRadius} cm` : ''}`,
+    pdfText(`${typeLabel} | ${width} × ${height} cm${cornerRadius > 0 ? ` | Zaokrąglenie: ${cornerRadius} cm` : ''}`),
     margin,
     margin + 6
   )
@@ -100,11 +107,11 @@ export async function exportToPdf(shape, filename) {
   pdf.setFontSize(7)
   pdf.setTextColor(150, 150, 150)
   const date = new Date().toLocaleDateString('pl-PL')
-  pdf.text(`Wygenerowano: ${date} | Skala: ${scale === 1 ? '1:1' : `${(scale * 100).toFixed(0)}%`}`, margin, pageHeight - margin)
+  pdf.text(pdfText(`Wygenerowano: ${date} | Skala: ${scale === 1 ? '1:1' : `${(scale * 100).toFixed(0)}%`}`), margin, pageHeight - margin)
 
   if (scale < 1) {
     pdf.setTextColor(200, 100, 100)
-    pdf.text('UWAGA: Rysunek przeskalowany, aby zmieścić się na stronie', pageWidth - margin, pageHeight - margin, { align: 'right' })
+    pdf.text(pdfText('UWAGA: Rysunek przeskalowany, aby zmiescic sie na stronie'), pageWidth - margin, pageHeight - margin, { align: 'right' })
   }
 
   const defaultName = `folplex-${width}x${height}cm.pdf`
