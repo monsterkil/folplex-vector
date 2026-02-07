@@ -31,7 +31,7 @@ function getStoredUser() {
 export default function App() {
   const [user, setUser] = useState(getStoredUser)
   const [shape, setShape] = useState(defaultShape)
-  const [showGrid, setShowGrid] = useState(true)
+  const [showGrid, setShowGrid] = useState(false)
   const [projects, setProjects] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [showSaveModal, setShowSaveModal] = useState(false)
