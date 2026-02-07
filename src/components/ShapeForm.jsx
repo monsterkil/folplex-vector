@@ -11,7 +11,7 @@ export default function ShapeForm({ shape, setShape }) {
         base.holes = { ...(prev.holes || {}), enabled: false }
       } else if (newType === 'ellipse') {
         base.width = prev.width || 40
-        base.height = prev.type === 'circle' ? (prev.width / 2 || 20) : (prev.height || 20)
+        base.height = (prev.type === 'circle' || prev.type === 'square') ? (prev.width / 2 || 20) : (prev.height || 20)
         base.cornerRadius = 0
         base.holes = { ...(prev.holes || {}), enabled: false }
       } else if (newType === 'square') {
