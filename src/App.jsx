@@ -178,7 +178,7 @@ export default function App() {
         editingProject={editingProject}
       />
 
-      <main className="container mx-auto px-4 py-8 pb-24 relative z-10">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Panel - Form */}
           <div className="lg:col-span-3 space-y-4 sidebar-panel">
@@ -217,6 +217,27 @@ export default function App() {
               </div>
               <ExportButtons shape={shape} />
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  const svgContent = generateSvgFile(shape)
+                  const filename = getExportFilename(shape, 'svg')
+                  downloadFile(svgContent, filename, 'image/svg+xml')
+                  toast.success('Plik pobrany')
+                } catch (err) {
+                  toast.error('Błąd pobierania pliku')
+                  console.error(err)
+                }
+              }}
+              className="btn btn-primary w-full py-3 min-h-[44px]"
+            >
+              <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              </svg>
+              Pobierz plik
+            </button>
           </div>
 
           {/* Center Panel - Preview */}
@@ -261,29 +282,6 @@ export default function App() {
           </div>
         </div>
       </main>
-
-      <div className="fixed bottom-0 left-0 right-0 z-20 py-3 bg-steel-950 border-t border-steel-800 flex justify-center">
-        <button
-          type="button"
-          onClick={() => {
-            try {
-              const svgContent = generateSvgFile(shape)
-              const filename = getExportFilename(shape, 'svg')
-              downloadFile(svgContent, filename, 'image/svg+xml')
-              toast.success('Plik pobrany')
-            } catch (err) {
-              toast.error('Błąd pobierania pliku')
-              console.error(err)
-            }
-          }}
-          className="btn btn-primary px-8 py-3 min-h-[44px]"
-        >
-          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-          </svg>
-          Pobierz plik
-        </button>
-      </div>
 
       {showSaveModal && (
         <SaveProjectModal
