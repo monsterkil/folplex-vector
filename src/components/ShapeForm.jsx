@@ -149,9 +149,8 @@ export default function ShapeForm({ shape, setShape }) {
       {/* Zaokrąglenie – prostokąt i kwadrat */}
       {isRectOrSquare && (
         <div>
-          <label className="input-label flex items-center justify-between">
-            <span>Zaokrąglenie rogów (cm)</span>
-            <span className="text-xs text-steel-500">max: {maxCornerRadius.toFixed(1)} cm</span>
+          <label className="input-label">
+            Zaokrąglenie rogów (cm)
           </label>
           <div className="space-y-3">
             <div className={groupClass}>
