@@ -2,11 +2,22 @@ import { generateSvgFile, downloadFile } from '../utils/generateSvg'
 import { exportToPdf } from '../utils/exportPdf'
 import { toast } from 'react-hot-toast'
 
+function getExportFilename(shape, ext) {
+  const base = (shape.nrZk || '').trim()
+  const safe = base.replace(/[^\w\-_.]/g, '_').slice(0, 80) || null
+  const type = shape.type || 'rectangle'
+  const w = type === 'circle' ? (shape.width || 10) : (shape.width || 20)
+  const h = type === 'circle' ? (shape.width || 10) : (shape.height || 15)
+  const fallback = `folplex-${w}x${h}cm`
+  const name = safe || fallback
+  return `${name}.${ext}`
+}
+
 export default function ExportButtons({ shape }) {
   const handleExportSvg = () => {
     try {
       const svgContent = generateSvgFile(shape)
-      const filename = `folplex-${shape.width}x${shape.height}cm.svg`
+      const filename = getExportFilename(shape, 'svg')
       downloadFile(svgContent, filename, 'image/svg+xml')
       toast.success('SVG pobrany')
     } catch (err) {
@@ -18,7 +29,8 @@ export default function ExportButtons({ shape }) {
   const handleExportPdf = async () => {
     try {
       toast.loading('Generowanie PDF...', { id: 'pdf' })
-      await exportToPdf(shape)
+      const filename = getExportFilename(shape, 'pdf')
+      await exportToPdf(shape, filename)
       toast.success('PDF pobrany', { id: 'pdf' })
     } catch (err) {
       toast.error('Błąd eksportu PDF', { id: 'pdf' })

@@ -1,221 +1,317 @@
 import { useEffect } from 'react'
 
 export default function ShapeForm({ shape, setShape }) {
+  const type = shape.type || 'rectangle'
+
+  const setType = (newType) => {
+    setShape(prev => {
+      const base = { ...prev, type: newType }
+      if (newType === 'circle') {
+        base.width = prev.width || 10
+        base.height = prev.width || 10
+        base.isSquare = false
+        base.cornerRadius = 0
+        base.holes = { ...(prev.holes || {}), enabled: false }
+      } else if (newType === 'ellipse') {
+        base.width = prev.width || 20
+        base.height = prev.height || 15
+        base.isSquare = false
+        base.cornerRadius = 0
+        base.holes = { ...(prev.holes || {}), enabled: false }
+      } else {
+        base.width = prev.width || 20
+        base.height = prev.height || 15
+        base.holes = prev.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
+      }
+      return base
+    })
+  }
+
   const handleChange = (field, value) => {
     const numValue = parseFloat(value) || 0
-    
     setShape(prev => {
       const updated = { ...prev, [field]: numValue }
-      
-      // If square mode is on, sync width and height
       if (prev.isSquare && (field === 'width' || field === 'height')) {
         updated.width = numValue
         updated.height = numValue
       }
-      
-      // Ensure corner radius doesn't exceed half of smallest dimension
       const maxRadius = Math.min(updated.width, updated.height) / 2
-      if (updated.cornerRadius > maxRadius) {
-        updated.cornerRadius = maxRadius
-      }
-      
+      if (updated.cornerRadius > maxRadius) updated.cornerRadius = maxRadius
       return updated
     })
   }
 
+  const handleHolesChange = (field, value) => {
+    const numValue = field === 'enabled' || field === 'count' ? (field === 'enabled' ? !!value : (parseInt(value, 10) || 0)) : (parseFloat(value) || 0)
+    setShape(prev => ({
+      ...prev,
+      holes: { ...(prev.holes || {}), [field]: numValue }
+    }))
+  }
+
   const toggleSquare = () => {
+    if (type !== 'rectangle') return
     setShape(prev => {
-      if (!prev.isSquare) {
-        // Switching to square - use width as the dimension
-        return {
-          ...prev,
-          isSquare: true,
-          height: prev.width
-        }
-      }
+      if (!prev.isSquare) return { ...prev, isSquare: true, height: prev.width }
       return { ...prev, isSquare: false }
     })
   }
 
-  const maxCornerRadius = Math.min(shape.width, shape.height) / 2
+  const maxCornerRadius = type === 'rectangle' ? Math.min(shape.width, shape.height) / 2 : 0
+  const holes = shape.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
 
   return (
     <div className="space-y-5">
-      {/* Square toggle */}
-      <div className="flex items-center justify-between p-3 bg-steel-800/50 rounded-lg border border-steel-700/50">
-        <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded border-2 transition-colors ${
-            shape.isSquare 
-              ? 'border-folplex-500 bg-folplex-500/10' 
-              : 'border-steel-600'
-          }`}>
-            <div className={`w-full h-full flex items-center justify-center ${
-              shape.isSquare ? 'text-folplex-400' : 'text-steel-500'
-            }`}>
-              {shape.isSquare ? (
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="4" y="4" width="16" height="16" rx="2" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="2" y="6" width="20" height="12" rx="2" />
-                </svg>
-              )}
-            </div>
-          </div>
-          <div>
-            <span className="text-steel-200 text-sm font-medium">
-              {shape.isSquare ? 'Kwadrat' : 'Prostokąt'}
-            </span>
-            <p className="text-xs text-steel-500">
-              {shape.isSquare ? 'Równe boki' : 'Dowolne proporcje'}
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={toggleSquare}
-          className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
-            shape.isSquare ? 'bg-folplex-600' : 'bg-steel-700'
-          }`}
-        >
-          <span
-            className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
-              shape.isSquare ? 'translate-x-7' : 'translate-x-1'
-            }`}
-          />
-        </button>
+      {/* Nr ZK – nazwa pliku */}
+      <div>
+        <label className="input-label">Nr ZK (nazwa pliku)</label>
+        <input
+          type="text"
+          className="input-field"
+          placeholder="np. 1050_INT"
+          value={shape.nrZk ?? ''}
+          onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
+        />
+        <p className="text-xs text-steel-500 mt-1">Puste = automatyczna nazwa (wymiary)</p>
       </div>
 
-      {/* Width */}
+      {/* Typ kształtu */}
+      <div>
+        <label className="input-label">Kształt</label>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { id: 'rectangle', label: 'Prostokąt', icon: 'rect' },
+            { id: 'circle', label: 'Koło', icon: 'circle' },
+            { id: 'ellipse', label: 'Elipsa', icon: 'ellipse' }
+          ].map(t => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setType(t.id)}
+              className={`p-3 rounded-lg border text-sm font-medium transition-all ${
+                type === t.id
+                  ? 'border-folplex-500 bg-folplex-500/10 text-folplex-400'
+                  : 'border-steel-700 bg-steel-800/50 text-steel-400 hover:border-steel-600'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Prostokąt / Kwadrat */}
+      {type === 'rectangle' && (
+        <div className="flex items-center justify-between p-3 bg-steel-800/50 rounded-lg border border-steel-700/50">
+          <div>
+            <span className="text-steel-200 text-sm font-medium">{shape.isSquare ? 'Kwadrat' : 'Prostokąt'}</span>
+            <p className="text-xs text-steel-500">{shape.isSquare ? 'Równe boki' : 'Dowolne proporcje'}</p>
+          </div>
+          <button
+            onClick={toggleSquare}
+            className={`relative w-12 h-6 rounded-full transition-colors ${shape.isSquare ? 'bg-folplex-600' : 'bg-steel-700'}`}
+          >
+            <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${shape.isSquare ? 'translate-x-7' : 'translate-x-1'}`} />
+          </button>
+        </div>
+      )}
+
+      {/* Szerokość / Średnica (koło) / Długość (elipsa) */}
       <div>
         <label className="input-label">
-          Szerokość
+          {type === 'circle' ? 'Średnica' : type === 'ellipse' ? 'Długość' : 'Szerokość'}
           <span className="text-steel-500 font-normal ml-1">(cm)</span>
         </label>
         <div className="relative">
           <input
             type="number"
-            value={shape.width || ''}
+            value={shape.width ?? ''}
             onChange={(e) => handleChange('width', e.target.value)}
             min="0.1"
             max="1000"
             step="0.1"
             className="input-field pr-12"
-            placeholder="20"
+            placeholder={type === 'circle' ? '10' : '20'}
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">
-            cm
-          </span>
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
         </div>
       </div>
 
-      {/* Height */}
-      <div className={shape.isSquare ? 'opacity-50 pointer-events-none' : ''}>
-        <label className="input-label">
-          Wysokość
-          <span className="text-steel-500 font-normal ml-1">(cm)</span>
-          {shape.isSquare && (
-            <span className="text-folplex-400 ml-2 text-xs">= szerokość</span>
-          )}
-        </label>
-        <div className="relative">
-          <input
-            type="number"
-            value={shape.height || ''}
-            onChange={(e) => handleChange('height', e.target.value)}
-            min="0.1"
-            max="1000"
-            step="0.1"
-            className="input-field pr-12"
-            placeholder="15"
-            disabled={shape.isSquare}
-          />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">
-            cm
-          </span>
-        </div>
-      </div>
-
-      {/* Corner Radius */}
-      <div>
-        <label className="input-label flex items-center justify-between">
-          <span>
-            Zaokrąglenie rogów
+      {/* Wysokość (prostokąt/elipsa) */}
+      {(type === 'rectangle' || type === 'ellipse') && (
+        <div className={type === 'rectangle' && shape.isSquare ? 'opacity-50 pointer-events-none' : ''}>
+          <label className="input-label">
+            {type === 'ellipse' ? 'Szerokość' : 'Wysokość'}
             <span className="text-steel-500 font-normal ml-1">(cm)</span>
-          </span>
-          <span className="text-xs text-steel-500 font-normal">
-            max: {maxCornerRadius.toFixed(1)} cm
-          </span>
-        </label>
-        <div className="space-y-3">
+            {type === 'rectangle' && shape.isSquare && <span className="text-folplex-400 ml-2 text-xs">= szerokość</span>}
+          </label>
           <div className="relative">
             <input
               type="number"
-              value={shape.cornerRadius || ''}
+              value={shape.height ?? ''}
+              onChange={(e) => handleChange('height', e.target.value)}
+              min="0.1"
+              max="1000"
+              step="0.1"
+              className="input-field pr-12"
+              placeholder="15"
+              disabled={type === 'rectangle' && shape.isSquare}
+            />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
+          </div>
+        </div>
+      )}
+
+      {/* Zaokrąglenie – tylko prostokąt */}
+      {type === 'rectangle' && (
+        <div>
+          <label className="input-label flex items-center justify-between">
+            <span>Zaokrąglenie rogów (cm)</span>
+            <span className="text-xs text-steel-500">max: {maxCornerRadius.toFixed(1)} cm</span>
+          </label>
+          <div className="space-y-3">
+            <div className="relative">
+              <input
+                type="number"
+                value={shape.cornerRadius ?? ''}
+                onChange={(e) => handleChange('cornerRadius', e.target.value)}
+                min="0"
+                max={maxCornerRadius}
+                step="0.1"
+                className="input-field pr-12"
+                placeholder="0"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
+            </div>
+            <input
+              type="range"
+              value={shape.cornerRadius ?? 0}
               onChange={(e) => handleChange('cornerRadius', e.target.value)}
               min="0"
               max={maxCornerRadius}
               step="0.1"
-              className="input-field pr-12"
-              placeholder="0"
+              className="w-full h-2 bg-steel-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-folplex-500 [&::-webkit-slider-thumb]:cursor-pointer"
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">
-              cm
-            </span>
           </div>
-          
-          {/* Slider */}
-          <input
-            type="range"
-            value={shape.cornerRadius}
-            onChange={(e) => handleChange('cornerRadius', e.target.value)}
-            min="0"
-            max={maxCornerRadius}
-            step="0.1"
-            className="w-full h-2 bg-steel-700 rounded-lg appearance-none cursor-pointer
-                       [&::-webkit-slider-thumb]:appearance-none
-                       [&::-webkit-slider-thumb]:w-4
-                       [&::-webkit-slider-thumb]:h-4
-                       [&::-webkit-slider-thumb]:rounded-full
-                       [&::-webkit-slider-thumb]:bg-folplex-500
-                       [&::-webkit-slider-thumb]:shadow-lg
-                       [&::-webkit-slider-thumb]:cursor-pointer
-                       [&::-webkit-slider-thumb]:transition-transform
-                       [&::-webkit-slider-thumb]:hover:scale-110"
-          />
         </div>
-      </div>
+      )}
 
-      {/* Quick presets */}
-      <div>
-        <label className="input-label mb-2">Szybkie rozmiary</label>
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { w: 10, h: 10, label: '10×10' },
-            { w: 20, h: 15, label: '20×15' },
-            { w: 30, h: 20, label: '30×20' },
-            { w: 50, h: 30, label: '50×30' },
-            { w: 60, h: 40, label: '60×40' },
-            { w: 100, h: 50, label: '100×50' },
-          ].map(preset => (
+      {/* Otwory – tylko prostokąt */}
+      {type === 'rectangle' && (
+        <div className="p-3 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="input-label mb-0">Otwory (np. do zawieszenia)</label>
             <button
-              key={preset.label}
-              onClick={() => setShape(prev => ({
-                ...prev,
-                width: preset.w,
-                height: preset.h,
-                isSquare: preset.w === preset.h
-              }))}
-              className="px-3 py-2 text-xs font-mono text-steel-400 bg-steel-800/50 
-                         border border-steel-700/50 rounded-lg
-                         hover:border-folplex-500/50 hover:text-folplex-400
-                         transition-all duration-200"
+              type="button"
+              onClick={() => handleHolesChange('enabled', !holes.enabled)}
+              className={`relative w-12 h-6 rounded-full transition-colors ${holes.enabled ? 'bg-folplex-600' : 'bg-steel-700'}`}
             >
-              {preset.label}
+              <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${holes.enabled ? 'translate-x-7' : 'translate-x-1'}`} />
             </button>
-          ))}
+          </div>
+          {holes.enabled && (
+            <>
+              <div>
+                <label className="input-label text-xs">Ilość (1–4, np. 4 rogi)</label>
+                <select
+                  value={holes.count ?? 4}
+                  onChange={(e) => handleHolesChange('count', parseInt(e.target.value, 10))}
+                  className="input-field"
+                >
+                  {[1, 2, 3, 4].map(n => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="input-label text-xs">Od krawędzi X (cm)</label>
+                  <input
+                    type="number"
+                    value={holes.fromEdgeX ?? 2}
+                    onChange={(e) => handleHolesChange('fromEdgeX', e.target.value)}
+                    min="0"
+                    step="0.1"
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="input-label text-xs">Od krawędzi Y (cm)</label>
+                  <input
+                    type="number"
+                    value={holes.fromEdgeY ?? 2}
+                    onChange={(e) => handleHolesChange('fromEdgeY', e.target.value)}
+                    min="0"
+                    step="0.1"
+                    className="input-field"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="input-label text-xs">Średnica otworu (cm)</label>
+                <input
+                  type="number"
+                  value={holes.diameter ?? 0.6}
+                  onChange={(e) => handleHolesChange('diameter', e.target.value)}
+                  min="0.1"
+                  step="0.1"
+                  className="input-field"
+                />
+              </div>
+            </>
+          )}
         </div>
-      </div>
+      )}
+
+      {/* Szybkie rozmiary – tylko prostokąt/elipsa */}
+      {(type === 'rectangle' || type === 'ellipse') && (
+        <div>
+          <label className="input-label mb-2">Szybkie rozmiary</label>
+          <div className="grid grid-cols-3 gap-2">
+            {(type === 'ellipse'
+              ? [{ w: 20, h: 15, label: '20×15' }, { w: 30, h: 20, label: '30×20' }, { w: 40, h: 30, label: '40×30' }]
+              : [
+                  { w: 10, h: 10, label: '10×10' },
+                  { w: 20, h: 15, label: '20×15' },
+                  { w: 30, h: 20, label: '30×20' },
+                  { w: 50, h: 30, label: '50×30' },
+                  { w: 60, h: 40, label: '60×40' },
+                  { w: 100, h: 50, label: '100×50' }
+                ]
+            ).map(preset => (
+              <button
+                key={preset.label}
+                onClick={() => setShape(prev => ({
+                  ...prev,
+                  width: preset.w,
+                  height: preset.h,
+                  isSquare: type === 'rectangle' && preset.w === preset.h
+                }))}
+                className="px-3 py-2 text-xs font-mono text-steel-400 bg-steel-800/50 border border-steel-700/50 rounded-lg hover:border-folplex-500/50 hover:text-folplex-400 transition-all"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {type === 'circle' && (
+        <div>
+          <label className="input-label mb-2">Szybkie średnice</label>
+          <div className="grid grid-cols-3 gap-2">
+            {[5, 10, 15, 20, 30, 50].map(d => (
+              <button
+                key={d}
+                onClick={() => setShape(prev => ({ ...prev, width: d, height: d }))}
+                className="px-3 py-2 text-xs font-mono text-steel-400 bg-steel-800/50 border border-steel-700/50 rounded-lg hover:border-folplex-500/50 hover:text-folplex-400 transition-all"
+              >
+                Ø{d} cm
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

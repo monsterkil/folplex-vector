@@ -15,7 +15,9 @@ const defaultShape = {
   width: 20,
   height: 15,
   cornerRadius: 0,
-  isSquare: false
+  isSquare: false,
+  holes: { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 },
+  nrZk: ''
 }
 
 function getStoredUser() {
@@ -239,7 +241,9 @@ export default function App() {
                   Podgląd
                 </h2>
                 <span className="badge badge-green">
-                  {shape.width} × {shape.height} cm
+                  {shape.type === 'circle'
+                    ? `Ø ${shape.width ?? 10} cm`
+                    : `${shape.width ?? 20} × ${shape.height ?? 15} cm`}
                 </span>
               </div>
               <SvgPreview shape={shape} showGrid={showGrid} />
