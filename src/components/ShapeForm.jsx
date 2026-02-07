@@ -54,6 +54,9 @@ export default function ShapeForm({ shape, setShape }) {
   const maxCornerRadius = isRectOrSquare ? Math.min(shape.width, shape.height) / 2 : 0
   const holes = shape.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
 
+  const step = 0.1
+  const stepBtnClass = 'w-9 h-[42px] flex-shrink-0 flex items-center justify-center rounded-lg border border-steel-700 bg-steel-800 text-steel-200 hover:bg-steel-700 hover:border-steel-600 font-mono text-lg transition-colors select-none'
+
   return (
     <div className="space-y-5">
       {/* Typ kształtu */}
@@ -88,18 +91,22 @@ export default function ShapeForm({ shape, setShape }) {
           {type === 'circle' ? 'Średnica' : type === 'ellipse' ? 'Długość' : type === 'square' ? 'Bok' : 'Szerokość'}
           <span className="text-steel-500 font-normal ml-1">(cm)</span>
         </label>
-        <div className="relative">
-          <input
-            type="number"
-            value={shape.width ?? ''}
-            onChange={(e) => handleChange('width', e.target.value)}
-            min="0.1"
-            max="1000"
-            step="0.1"
-            className="input-field pr-12"
-            placeholder={type === 'circle' ? '10' : '20'}
-          />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
+        <div className="flex gap-1.5 items-stretch">
+          <button type="button" className={stepBtnClass} onClick={() => handleChange('width', Math.max(0.1, (parseFloat(shape.width) || 0) - step))} title="Zmniejsz">−</button>
+          <div className="relative flex-1 min-w-0">
+            <input
+              type="number"
+              value={shape.width ?? ''}
+              onChange={(e) => handleChange('width', e.target.value)}
+              min="0.1"
+              max="1000"
+              step="0.1"
+              className="input-field pr-12 w-full"
+              placeholder={type === 'circle' ? '10' : '20'}
+            />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono pointer-events-none">cm</span>
+          </div>
+          <button type="button" className={stepBtnClass} onClick={() => handleChange('width', Math.min(1000, (parseFloat(shape.width) || 0) + step))} title="Zwiększ">+</button>
         </div>
       </div>
 
@@ -110,18 +117,22 @@ export default function ShapeForm({ shape, setShape }) {
             {type === 'ellipse' ? 'Szerokość' : 'Wysokość'}
             <span className="text-steel-500 font-normal ml-1">(cm)</span>
           </label>
-          <div className="relative">
-            <input
-              type="number"
-              value={shape.height ?? ''}
-              onChange={(e) => handleChange('height', e.target.value)}
-              min="0.1"
-              max="1000"
-              step="0.1"
-              className="input-field pr-12"
-              placeholder="15"
-            />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
+          <div className="flex gap-1.5 items-stretch">
+            <button type="button" className={stepBtnClass} onClick={() => handleChange('height', Math.max(0.1, (parseFloat(shape.height) || 0) - step))} title="Zmniejsz">−</button>
+            <div className="relative flex-1 min-w-0">
+              <input
+                type="number"
+                value={shape.height ?? ''}
+                onChange={(e) => handleChange('height', e.target.value)}
+                min="0.1"
+                max="1000"
+                step="0.1"
+                className="input-field pr-12 w-full"
+                placeholder="15"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono pointer-events-none">cm</span>
+            </div>
+            <button type="button" className={stepBtnClass} onClick={() => handleChange('height', Math.min(1000, (parseFloat(shape.height) || 0) + step))} title="Zwiększ">+</button>
           </div>
         </div>
       )}
@@ -134,18 +145,22 @@ export default function ShapeForm({ shape, setShape }) {
             <span className="text-xs text-steel-500">max: {maxCornerRadius.toFixed(1)} cm</span>
           </label>
           <div className="space-y-3">
-            <div className="relative">
-              <input
-                type="number"
-                value={shape.cornerRadius ?? ''}
-                onChange={(e) => handleChange('cornerRadius', e.target.value)}
-                min="0"
-                max={maxCornerRadius}
-                step="0.1"
-                className="input-field pr-12"
-                placeholder="0"
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
+            <div className="flex gap-1.5 items-stretch">
+              <button type="button" className={stepBtnClass} onClick={() => handleChange('cornerRadius', Math.max(0, (parseFloat(shape.cornerRadius) || 0) - step))} title="Zmniejsz">−</button>
+              <div className="relative flex-1 min-w-0">
+                <input
+                  type="number"
+                  value={shape.cornerRadius ?? ''}
+                  onChange={(e) => handleChange('cornerRadius', e.target.value)}
+                  min="0"
+                  max={maxCornerRadius}
+                  step="0.1"
+                  className="input-field pr-12 w-full"
+                  placeholder="0"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono pointer-events-none">cm</span>
+              </div>
+              <button type="button" className={stepBtnClass} onClick={() => handleChange('cornerRadius', Math.min(maxCornerRadius, (parseFloat(shape.cornerRadius) || 0) + step))} title="Zwiększ">+</button>
             </div>
             <input
               type="range"
@@ -190,37 +205,49 @@ export default function ShapeForm({ shape, setShape }) {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="input-label text-xs">Od krawędzi X (cm)</label>
-                  <input
-                    type="number"
-                    value={holes.fromEdgeX ?? 2}
-                    onChange={(e) => handleHolesChange('fromEdgeX', e.target.value)}
-                    min="0"
-                    step="0.1"
-                    className="input-field"
-                  />
+                  <div className="flex gap-1.5 items-stretch">
+                    <button type="button" className={stepBtnClass} onClick={() => handleHolesChange('fromEdgeX', Math.max(0, (parseFloat(holes.fromEdgeX) || 0) - step))}>−</button>
+                    <input
+                      type="number"
+                      value={holes.fromEdgeX ?? 2}
+                      onChange={(e) => handleHolesChange('fromEdgeX', e.target.value)}
+                      min="0"
+                      step="0.1"
+                      className="input-field flex-1 min-w-0"
+                    />
+                    <button type="button" className={stepBtnClass} onClick={() => handleHolesChange('fromEdgeX', (parseFloat(holes.fromEdgeX) || 0) + step)}>+</button>
+                  </div>
                 </div>
                 <div>
                   <label className="input-label text-xs">Od krawędzi Y (cm)</label>
-                  <input
-                    type="number"
-                    value={holes.fromEdgeY ?? 2}
-                    onChange={(e) => handleHolesChange('fromEdgeY', e.target.value)}
-                    min="0"
-                    step="0.1"
-                    className="input-field"
-                  />
+                  <div className="flex gap-1.5 items-stretch">
+                    <button type="button" className={stepBtnClass} onClick={() => handleHolesChange('fromEdgeY', Math.max(0, (parseFloat(holes.fromEdgeY) || 0) - step))}>−</button>
+                    <input
+                      type="number"
+                      value={holes.fromEdgeY ?? 2}
+                      onChange={(e) => handleHolesChange('fromEdgeY', e.target.value)}
+                      min="0"
+                      step="0.1"
+                      className="input-field flex-1 min-w-0"
+                    />
+                    <button type="button" className={stepBtnClass} onClick={() => handleHolesChange('fromEdgeY', (parseFloat(holes.fromEdgeY) || 0) + step)}>+</button>
+                  </div>
                 </div>
               </div>
               <div>
                 <label className="input-label text-xs">Średnica otworu (cm)</label>
-                <input
-                  type="number"
-                  value={holes.diameter ?? 0.6}
-                  onChange={(e) => handleHolesChange('diameter', e.target.value)}
-                  min="0.1"
-                  step="0.1"
-                  className="input-field"
-                />
+                <div className="flex gap-1.5 items-stretch">
+                  <button type="button" className={stepBtnClass} onClick={() => handleHolesChange('diameter', Math.max(0.1, (parseFloat(holes.diameter) || 0.6) - step))}>−</button>
+                  <input
+                    type="number"
+                    value={holes.diameter ?? 0.6}
+                    onChange={(e) => handleHolesChange('diameter', e.target.value)}
+                    min="0.1"
+                    step="0.1"
+                    className="input-field flex-1 min-w-0"
+                  />
+                  <button type="button" className={stepBtnClass} onClick={() => handleHolesChange('diameter', (parseFloat(holes.diameter) || 0.6) + step)}>+</button>
+                </div>
               </div>
             </>
           )}
