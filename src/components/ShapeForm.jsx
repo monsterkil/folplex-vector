@@ -64,7 +64,7 @@ export default function ShapeForm({ shape, setShape }) {
   const stepSmall = 0.1
   const groupClass = 'flex rounded-md border border-steel-700 overflow-hidden bg-steel-800'
   const btnStepClass = 'w-9 flex-shrink-0 flex items-center justify-center bg-steel-800 border-steel-700 text-steel-200 hover:bg-steel-600 font-mono text-lg transition-colors select-none disabled:opacity-40'
-  const inputInGroupClass = 'input-field border-0 rounded-none pr-12 w-full min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30'
+  const inputInGroupClass = 'input-field border-0 !rounded-none pr-12 w-full min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30'
 
   return (
     <div className="space-y-5">
@@ -222,7 +222,7 @@ export default function ShapeForm({ shape, setShape }) {
                       onChange={(e) => handleHolesChange('fromEdgeX', e.target.value)}
                       min="0"
                       step="0.1"
-                      className="input-field border-0 rounded-none flex-1 min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30"
+                      className="input-field border-0 !rounded-none flex-1 min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30"
                     />
                     <button type="button" className={btnStepClass + ' border-l'} onClick={() => handleHolesChange('fromEdgeX', roundTo((holes.fromEdgeX || 0) + stepSmall, 1))}>+</button>
                   </div>
@@ -237,7 +237,7 @@ export default function ShapeForm({ shape, setShape }) {
                       onChange={(e) => handleHolesChange('fromEdgeY', e.target.value)}
                       min="0"
                       step="0.1"
-                      className="input-field border-0 rounded-none flex-1 min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30"
+                      className="input-field border-0 !rounded-none flex-1 min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30"
                     />
                     <button type="button" className={btnStepClass + ' border-l'} onClick={() => handleHolesChange('fromEdgeY', roundTo((holes.fromEdgeY || 0) + stepSmall, 1))}>+</button>
                   </div>
@@ -253,7 +253,7 @@ export default function ShapeForm({ shape, setShape }) {
                     onChange={(e) => handleHolesChange('diameter', e.target.value)}
                     min="0.1"
                     step="0.1"
-                    className="input-field border-0 rounded-none flex-1 min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30"
+                    className="input-field border-0 !rounded-none flex-1 min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30"
                   />
                   <button type="button" className={btnStepClass + ' border-l'} onClick={() => handleHolesChange('diameter', roundTo((holes.diameter || 0.6) + stepSmall, 1))}>+</button>
                 </div>
