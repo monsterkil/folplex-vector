@@ -49,22 +49,21 @@ function ellipsePath(shape) {
   return `M ${cx + rx},${cy} A ${rx},${ry} 0 1 1 ${cx - rx},${cy} A ${rx},${ry} 0 1 1 ${cx + rx},${cy}`
 }
 
-/** Angles (degrees) for 1–4 holes: right, then evenly or cardinal */
-const HOLE_ANGLES = {
-  1: [0],
-  2: [0, 180],
-  3: [0, 120, 240],
-  4: [0, 90, 180, 270]
+const MAX_HOLES = 16
+
+/** Evenly distributed angles for n holes (degrees, 0 = right, clockwise) */
+function holeAngles(n) {
+  return Array.from({ length: n }, (_, i) => (360 * i) / n)
 }
 
 /**
- * Hole positions for rectangle (4 corners), circle and ellipse (on perimeter).
+ * Hole positions for rectangle/square (along inner perimeter), circle and ellipse (on perimeter).
  */
 export function getHolePositions(shape) {
   const holes = shape.holes || {}
   if (!holes.enabled || !holes.count) return []
   const type = shape.type || 'rectangle'
-  const count = Math.min(4, Math.max(1, holes.count || 1))
+  const count = Math.min(MAX_HOLES, Math.max(1, holes.count || 1))
   const d = holes.diameter ?? 0.6
   const r = d / 2
 
@@ -75,8 +74,8 @@ export function getHolePositions(shape) {
     const cy = R
     const fromEdge = holes.fromEdgeX ?? 2
     const holeRadius = Math.max(0, R - fromEdge)
-    const angles = HOLE_ANGLES[count] || HOLE_ANGLES[4]
-    return angles.slice(0, count).map((deg) => {
+    const angles = holeAngles(count)
+    return angles.map((deg) => {
       const rad = (deg * Math.PI) / 180
       const x = cx + holeRadius * Math.cos(rad)
       const y = cy + holeRadius * Math.sin(rad)
@@ -93,8 +92,8 @@ export function getHolePositions(shape) {
     const cy = ry
     const fx = holes.fromEdgeX ?? 2
     const fy = holes.fromEdgeY ?? 2
-    const angles = HOLE_ANGLES[count] || HOLE_ANGLES[4]
-    return angles.slice(0, count).map((deg) => {
+    const angles = holeAngles(count)
+    return angles.map((deg) => {
       const rad = (deg * Math.PI) / 180
       const x = cx + (rx - fx) * Math.cos(rad)
       const y = cy + (ry - fy) * Math.sin(rad)
@@ -102,16 +101,34 @@ export function getHolePositions(shape) {
     })
   }
 
-  // rectangle / square
+  // rectangle / square: distribute holes along inner perimeter (clockwise from top-left)
   const { width, height } = shape
   const fx = holes.fromEdgeX ?? 2
   const fy = holes.fromEdgeY ?? 2
+  const w = Math.max(0, width - 2 * fx)
+  const h = Math.max(0, height - 2 * fy)
+  const perim = 2 * w + 2 * h
+  if (perim <= 0) return []
   const positions = []
-  if (count >= 1) positions.push({ x: fx, y: fy, r })
-  if (count >= 2) positions.push({ x: width - fx, y: fy, r })
-  if (count >= 3) positions.push({ x: width - fx, y: height - fy, r })
-  if (count >= 4) positions.push({ x: fx, y: height - fy, r })
-  return positions.slice(0, count)
+  for (let i = 0; i < count; i++) {
+    const p = (i * perim) / count
+    let x, y
+    if (p < w) {
+      x = fx + p
+      y = fy
+    } else if (p < w + h) {
+      x = width - fx
+      y = fy + (p - w)
+    } else if (p < 2 * w + h) {
+      x = width - fx - (p - w - h)
+      y = height - fy
+    } else {
+      x = fx
+      y = height - fy - (p - 2 * w - h)
+    }
+    positions.push({ x, y, r })
+  }
+  return positions
 }
 
 /** Hole circle: (x, y) = center of hole, r = radius */
