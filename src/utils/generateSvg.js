@@ -24,20 +24,20 @@ function rectanglePath(shape) {
 }
 
 /**
- * Circle path (center at width/2, height/2; radius = min/2 for fit, or use width as diameter)
- * Shape: width = diameter (cm)
+ * Circle path: center (r,r), radius r, diameter = width (cm).
+ * SVG full circle = two arcs of 180° each: (cx+r,cy) → (cx-r,cy) → (cx+r,cy)
  */
 function circlePath(shape) {
   const d = shape.width || shape.diameter || 10
   const r = d / 2
   const cx = r
   const cy = r
-  // SVG circle as path: M cx,cy m -r,0 a r,r 0 1,1 2*r,0 a r,r 0 1,1 -2*r,0
-  return `M ${cx + r},${cy} A ${r},${r} 0 1 1 ${cx + r - 0.001},${cy} A ${r},${r} 0 1 1 ${cx + r},${cy}`
+  return `M ${cx + r},${cy} A ${r},${r} 0 1 1 ${cx - r},${cy} A ${r},${r} 0 1 1 ${cx + r},${cy}`
 }
 
 /**
- * Ellipse path (width = length, height = width in 2nd dimension; center at w/2, h/2)
+ * Ellipse path: center (rx,ry), radii rx, ry; width = 2*rx, height = 2*ry (cm).
+ * Full ellipse = two arcs: (cx+rx,cy) → (cx-rx,cy) → (cx+rx,cy)
  */
 function ellipsePath(shape) {
   const w = shape.width || 20
@@ -46,7 +46,7 @@ function ellipsePath(shape) {
   const ry = h / 2
   const cx = rx
   const cy = ry
-  return `M ${cx + rx},${cy} A ${rx},${ry} 0 1 1 ${cx + rx - 0.001},${cy} A ${rx},${ry} 0 1 1 ${cx + rx},${cy}`
+  return `M ${cx + rx},${cy} A ${rx},${ry} 0 1 1 ${cx - rx},${cy} A ${rx},${ry} 0 1 1 ${cx + rx},${cy}`
 }
 
 /**
@@ -71,8 +71,9 @@ export function getHolePositions(shape) {
   return positions.slice(0, holes.count)
 }
 
+/** Hole circle: (x, y) = center of hole, r = radius */
 function holePathString(x, y, r) {
-  return `M ${x + r},${y} A ${r},${r} 0 1 1 ${x + r - 0.001},${y} A ${r},${r} 0 1 1 ${x + r},${y}`
+  return `M ${x + r},${y} A ${r},${r} 0 1 1 ${x - r},${y} A ${r},${r} 0 1 1 ${x + r},${y}`
 }
 
 /**
