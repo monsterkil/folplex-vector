@@ -63,15 +63,15 @@ export default function ShapeForm({ shape, setShape }) {
   const stepMain = 1
   const stepSmall = 0.1
   const groupClass = 'flex rounded-md border border-steel-700 overflow-hidden bg-steel-800 max-w-[180px]'
-  const btnStepClass = 'w-9 flex-shrink-0 flex items-center justify-center bg-steel-800 border-steel-700 text-steel-200 hover:bg-steel-600 font-mono text-lg transition-colors select-none disabled:opacity-40'
+  const btnStepClass = 'w-8 flex-shrink-0 flex items-center justify-center bg-steel-800 border-steel-700 text-steel-200 hover:bg-steel-600 font-mono text-base transition-colors select-none disabled:opacity-40'
   const inputInGroupClass = 'input-field border-0 !rounded-none pr-12 w-full min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30'
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* Typ kształtu */}
       <div>
         <label className="input-label">Kształt</label>
-        <div className="grid grid-cols-2 gap-1.5">
+        <div className="grid grid-cols-2 gap-2">
           {[
             { id: 'rectangle', label: 'Prostokąt' },
             { id: 'square', label: 'Kwadrat' },
@@ -82,7 +82,7 @@ export default function ShapeForm({ shape, setShape }) {
               key={t.id}
               type="button"
               onClick={() => setType(t.id)}
-              className={`p-2 rounded-lg border text-sm font-medium transition-all ${
+              className={`py-2 px-3 rounded-lg border text-sm font-medium transition-all ${
                 type === t.id
                   ? 'border-folplex-500 bg-folplex-500/10 text-folplex-400'
                   : 'border-steel-700 bg-steel-800/50 text-steel-400 hover:border-steel-600'
@@ -152,7 +152,7 @@ export default function ShapeForm({ shape, setShape }) {
           <label className="input-label">
             Zaokrąglenie rogów (cm)
           </label>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <div className={groupClass}>
               <button type="button" className={btnStepClass + ' border-r'} onClick={() => handleChange('cornerRadius', Math.max(0, roundTo((shape.cornerRadius || 0) - stepSmall, 1)))} title="Zmniejsz">−</button>
               <div className="relative flex-1 min-w-0">
@@ -185,7 +185,7 @@ export default function ShapeForm({ shape, setShape }) {
 
       {/* Otwory – prostokąt i kwadrat */}
       {isRectOrSquare && (
-        <div className="p-2 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-2">
+        <div className="p-2.5 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-2.5">
           <div className="flex items-center justify-between">
             <label className="input-label mb-0">Otwory</label>
             <button

@@ -147,6 +147,20 @@ input[type="number"]::-webkit-inner-spin-button {
   @apply block text-sm font-medium text-steel-400 mb-1.5;
 }
 
+/* Sidebar: proporcjonalnie mniejsze elementy */
+.sidebar-panel .input-label {
+  @apply text-xs mb-1;
+}
+.sidebar-panel .input-field {
+  @apply py-2 text-sm;
+}
+.sidebar-panel .btn {
+  @apply py-2 text-sm;
+}
+.sidebar-panel .btn svg {
+  @apply w-4 h-4 shrink-0;
+}
+
 /* Badge */
 .badge {
   @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
