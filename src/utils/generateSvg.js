@@ -93,7 +93,7 @@ export function generateSvgPath(shape) {
     main = rectanglePath(shape)
   }
 
-  const holes = shape.type === 'rectangle' ? getHolePositions(shape) : []
+  const holes = (shape.type === 'rectangle' || shape.type === 'square') ? getHolePositions(shape) : []
   const holePaths = holes.map(({ x, y, r }) => holePathString(x, y, r))
 
   return { main, holePaths }
@@ -112,8 +112,8 @@ export function getMainPathD(shape) {
  */
 export function generateSvgFile(shape) {
   const type = shape.type || 'rectangle'
-  const width = type === 'circle' ? (shape.width || 10) : (shape.width || 20)
-  const height = type === 'circle' ? (shape.width || 10) : (shape.height || 15)
+  const width = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
+  const height = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
   const { main, holePaths } = generateSvgPath(shape)
 
   const widthMm = width * 10
@@ -151,8 +151,8 @@ export function generateSvgFile(shape) {
  */
 export function generateSvgElement(shape) {
   const type = shape.type || 'rectangle'
-  const width = type === 'circle' ? (shape.width || 10) : (shape.width || 20)
-  const height = type === 'circle' ? (shape.width || 10) : (shape.height || 15)
+  const width = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
+  const height = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
   const { main, holePaths } = generateSvgPath(shape)
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')

@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 export default function ShapeForm({ shape, setShape }) {
   const type = shape.type || 'rectangle'
 
@@ -9,15 +7,18 @@ export default function ShapeForm({ shape, setShape }) {
       if (newType === 'circle') {
         base.width = prev.width || 10
         base.height = prev.width || 10
-        base.isSquare = false
         base.cornerRadius = 0
         base.holes = { ...(prev.holes || {}), enabled: false }
       } else if (newType === 'ellipse') {
         base.width = prev.width || 20
         base.height = prev.height || 15
-        base.isSquare = false
         base.cornerRadius = 0
         base.holes = { ...(prev.holes || {}), enabled: false }
+      } else if (newType === 'square') {
+        const s = prev.width || prev.height || 10
+        base.width = s
+        base.height = s
+        base.holes = prev.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
       } else {
         base.width = prev.width || 20
         base.height = prev.height || 15
@@ -31,7 +32,7 @@ export default function ShapeForm({ shape, setShape }) {
     const numValue = parseFloat(value) || 0
     setShape(prev => {
       const updated = { ...prev, [field]: numValue }
-      if (prev.isSquare && (field === 'width' || field === 'height')) {
+      if (type === 'square' && (field === 'width' || field === 'height')) {
         updated.width = numValue
         updated.height = numValue
       }
@@ -49,40 +50,21 @@ export default function ShapeForm({ shape, setShape }) {
     }))
   }
 
-  const toggleSquare = () => {
-    if (type !== 'rectangle') return
-    setShape(prev => {
-      if (!prev.isSquare) return { ...prev, isSquare: true, height: prev.width }
-      return { ...prev, isSquare: false }
-    })
-  }
-
-  const maxCornerRadius = type === 'rectangle' ? Math.min(shape.width, shape.height) / 2 : 0
+  const isRectOrSquare = type === 'rectangle' || type === 'square'
+  const maxCornerRadius = isRectOrSquare ? Math.min(shape.width, shape.height) / 2 : 0
   const holes = shape.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
 
   return (
     <div className="space-y-5">
-      {/* Nr ZK – nazwa pliku */}
-      <div>
-        <label className="input-label">Nr ZK (nazwa pliku)</label>
-        <input
-          type="text"
-          className="input-field"
-          placeholder="np. 1050_INT"
-          value={shape.nrZk ?? ''}
-          onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
-        />
-        <p className="text-xs text-steel-500 mt-1">Puste = automatyczna nazwa (wymiary)</p>
-      </div>
-
       {/* Typ kształtu */}
       <div>
         <label className="input-label">Kształt</label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {[
-            { id: 'rectangle', label: 'Prostokąt', icon: 'rect' },
-            { id: 'circle', label: 'Koło', icon: 'circle' },
-            { id: 'ellipse', label: 'Elipsa', icon: 'ellipse' }
+            { id: 'rectangle', label: 'Prostokąt' },
+            { id: 'square', label: 'Kwadrat' },
+            { id: 'circle', label: 'Koło' },
+            { id: 'ellipse', label: 'Elipsa' }
           ].map(t => (
             <button
               key={t.id}
@@ -100,26 +82,10 @@ export default function ShapeForm({ shape, setShape }) {
         </div>
       </div>
 
-      {/* Prostokąt / Kwadrat */}
-      {type === 'rectangle' && (
-        <div className="flex items-center justify-between p-3 bg-steel-800/50 rounded-lg border border-steel-700/50">
-          <div>
-            <span className="text-steel-200 text-sm font-medium">{shape.isSquare ? 'Kwadrat' : 'Prostokąt'}</span>
-            <p className="text-xs text-steel-500">{shape.isSquare ? 'Równe boki' : 'Dowolne proporcje'}</p>
-          </div>
-          <button
-            onClick={toggleSquare}
-            className={`relative w-12 h-6 rounded-full transition-colors ${shape.isSquare ? 'bg-folplex-600' : 'bg-steel-700'}`}
-          >
-            <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${shape.isSquare ? 'translate-x-7' : 'translate-x-1'}`} />
-          </button>
-        </div>
-      )}
-
-      {/* Szerokość / Średnica (koło) / Długość (elipsa) */}
+      {/* Szerokość / Bok / Średnica / Długość */}
       <div>
         <label className="input-label">
-          {type === 'circle' ? 'Średnica' : type === 'ellipse' ? 'Długość' : 'Szerokość'}
+          {type === 'circle' ? 'Średnica' : type === 'ellipse' ? 'Długość' : type === 'square' ? 'Bok' : 'Szerokość'}
           <span className="text-steel-500 font-normal ml-1">(cm)</span>
         </label>
         <div className="relative">
@@ -139,11 +105,10 @@ export default function ShapeForm({ shape, setShape }) {
 
       {/* Wysokość (prostokąt/elipsa) */}
       {(type === 'rectangle' || type === 'ellipse') && (
-        <div className={type === 'rectangle' && shape.isSquare ? 'opacity-50 pointer-events-none' : ''}>
+        <div>
           <label className="input-label">
             {type === 'ellipse' ? 'Szerokość' : 'Wysokość'}
             <span className="text-steel-500 font-normal ml-1">(cm)</span>
-            {type === 'rectangle' && shape.isSquare && <span className="text-folplex-400 ml-2 text-xs">= szerokość</span>}
           </label>
           <div className="relative">
             <input
@@ -155,15 +120,14 @@ export default function ShapeForm({ shape, setShape }) {
               step="0.1"
               className="input-field pr-12"
               placeholder="15"
-              disabled={type === 'rectangle' && shape.isSquare}
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-steel-500 text-sm font-mono">cm</span>
           </div>
         </div>
       )}
 
-      {/* Zaokrąglenie – tylko prostokąt */}
-      {type === 'rectangle' && (
+      {/* Zaokrąglenie – prostokąt i kwadrat */}
+      {isRectOrSquare && (
         <div>
           <label className="input-label flex items-center justify-between">
             <span>Zaokrąglenie rogów (cm)</span>
@@ -196,8 +160,8 @@ export default function ShapeForm({ shape, setShape }) {
         </div>
       )}
 
-      {/* Otwory – tylko prostokąt */}
-      {type === 'rectangle' && (
+      {/* Otwory – prostokąt i kwadrat */}
+      {isRectOrSquare && (
         <div className="p-3 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-3">
           <div className="flex items-center justify-between">
             <label className="input-label mb-0">Otwory (np. do zawieszenia)</label>
@@ -263,30 +227,57 @@ export default function ShapeForm({ shape, setShape }) {
         </div>
       )}
 
-      {/* Szybkie rozmiary – tylko prostokąt/elipsa */}
-      {(type === 'rectangle' || type === 'ellipse') && (
+      {/* Szybkie rozmiary – prostokąt */}
+      {type === 'rectangle' && (
         <div>
           <label className="input-label mb-2">Szybkie rozmiary</label>
           <div className="grid grid-cols-3 gap-2">
-            {(type === 'ellipse'
-              ? [{ w: 20, h: 15, label: '20×15' }, { w: 30, h: 20, label: '30×20' }, { w: 40, h: 30, label: '40×30' }]
-              : [
-                  { w: 10, h: 10, label: '10×10' },
-                  { w: 20, h: 15, label: '20×15' },
-                  { w: 30, h: 20, label: '30×20' },
-                  { w: 50, h: 30, label: '50×30' },
-                  { w: 60, h: 40, label: '60×40' },
-                  { w: 100, h: 50, label: '100×50' }
-                ]
-            ).map(preset => (
+            {[
+              { w: 20, h: 15, label: '20×15' },
+              { w: 30, h: 20, label: '30×20' },
+              { w: 50, h: 30, label: '50×30' },
+              { w: 60, h: 40, label: '60×40' },
+              { w: 100, h: 50, label: '100×50' }
+            ].map(preset => (
               <button
                 key={preset.label}
-                onClick={() => setShape(prev => ({
-                  ...prev,
-                  width: preset.w,
-                  height: preset.h,
-                  isSquare: type === 'rectangle' && preset.w === preset.h
-                }))}
+                onClick={() => setShape(prev => ({ ...prev, width: preset.w, height: preset.h }))}
+                className="px-3 py-2 text-xs font-mono text-steel-400 bg-steel-800/50 border border-steel-700/50 rounded-lg hover:border-folplex-500/50 hover:text-folplex-400 transition-all"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Szybkie rozmiary – kwadrat */}
+      {type === 'square' && (
+        <div>
+          <label className="input-label mb-2">Szybkie rozmiary</label>
+          <div className="grid grid-cols-3 gap-2">
+            {[10, 15, 20, 30, 40, 50].map(s => (
+              <button
+                key={s}
+                onClick={() => setShape(prev => ({ ...prev, width: s, height: s }))}
+                className="px-3 py-2 text-xs font-mono text-steel-400 bg-steel-800/50 border border-steel-700/50 rounded-lg hover:border-folplex-500/50 hover:text-folplex-400 transition-all"
+              >
+                {s}×{s}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Szybkie rozmiary – elipsa */}
+      {type === 'ellipse' && (
+        <div>
+          <label className="input-label mb-2">Szybkie rozmiary</label>
+          <div className="grid grid-cols-3 gap-2">
+            {[{ w: 20, h: 15, label: '20×15' }, { w: 30, h: 20, label: '30×20' }, { w: 40, h: 30, label: '40×30' }].map(preset => (
+              <button
+                key={preset.label}
+                onClick={() => setShape(prev => ({ ...prev, width: preset.w, height: preset.h }))}
                 className="px-3 py-2 text-xs font-mono text-steel-400 bg-steel-800/50 border border-steel-700/50 rounded-lg hover:border-folplex-500/50 hover:text-folplex-400 transition-all"
               >
                 {preset.label}

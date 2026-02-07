@@ -8,8 +8,8 @@ import { generateSvgPath, getHolePositions } from './generateSvg'
  */
 export async function exportToPdf(shape, filename) {
   const type = shape.type || 'rectangle'
-  const width = type === 'circle' ? (shape.width || 10) : (shape.width || 20)
-  const height = type === 'circle' ? (shape.width || 10) : (shape.height || 15)
+  const width = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
+  const height = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
   const cornerRadius = shape.cornerRadius ?? 0
 
   const A4_WIDTH = 210
@@ -72,8 +72,8 @@ export async function exportToPdf(shape, filename) {
     }
   }
 
-  // Holes (rectangle only)
-  if (type === 'rectangle') {
+  // Holes (rectangle and square)
+  if (type === 'rectangle' || type === 'square') {
     const holes = getHolePositions(shape)
     holes.forEach(({ x, y, r }) => {
       const cx = offsetX + x * 10 * scale

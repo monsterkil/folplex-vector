@@ -15,7 +15,6 @@ const defaultShape = {
   width: 20,
   height: 15,
   cornerRadius: 0,
-  isSquare: false,
   holes: { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 },
   nrZk: ''
 }
@@ -196,25 +195,18 @@ export default function App() {
                 </svg>
                 Eksport
               </h2>
-              <ExportButtons shape={shape} />
-            </div>
-
-            <div className="card p-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="flex items-center justify-between">
-                <span className="text-steel-300">Pokaż siatkę</span>
-                <button
-                  onClick={() => setShowGrid(!showGrid)}
-                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
-                    showGrid ? 'bg-folplex-600' : 'bg-steel-700'
-                  }`}
-                >
-                  <span
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
-                      showGrid ? 'translate-x-7' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
+              <div className="mb-4">
+                <label className="input-label">Nr ZK (nazwa pliku)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="np. 1050_INT"
+                  value={shape.nrZk ?? ''}
+                  onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
+                />
+                <p className="text-xs text-steel-500 mt-1">Puste = automatyczna nazwa (wymiary)</p>
               </div>
+              <ExportButtons shape={shape} />
             </div>
 
             <button
@@ -230,7 +222,7 @@ export default function App() {
           </div>
 
           {/* Center Panel - Preview */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-6">
             <div className="card p-6 h-full animate-fade-in" style={{ animationDelay: '0.15s' }}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-steel-200 flex items-center gap-2">
@@ -243,15 +235,30 @@ export default function App() {
                 <span className="badge badge-green">
                   {shape.type === 'circle'
                     ? `Ø ${shape.width ?? 10} cm`
-                    : `${shape.width ?? 20} × ${shape.height ?? 15} cm`}
+                    : (shape.type === 'square' ? `${shape.width ?? 10} × ${shape.width ?? 10} cm` : `${shape.width ?? 20} × ${shape.height ?? 15} cm`)}
                 </span>
               </div>
               <SvgPreview shape={shape} showGrid={showGrid} />
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-steel-800">
+                <span className="text-steel-300 text-sm">Pokaż siatkę</span>
+                <button
+                  onClick={() => setShowGrid(!showGrid)}
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
+                    showGrid ? 'bg-folplex-600' : 'bg-steel-700'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
+                      showGrid ? 'translate-x-7' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Right Panel - Projects */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-2">
             <div className="card p-6 h-full animate-fade-in" style={{ animationDelay: '0.25s' }}>
               <h2 className="text-lg font-semibold text-steel-200 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

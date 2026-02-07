@@ -3,8 +3,8 @@ import { generateSvgPath } from '../utils/generateSvg'
 
 export default function SvgPreview({ shape, showGrid }) {
   const type = shape.type || 'rectangle'
-  const width = type === 'circle' ? (shape.width || 10) : (shape.width || 20)
-  const height = type === 'circle' ? (shape.width || 10) : (shape.height || 15)
+  const width = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
+  const height = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
   const cornerRadius = shape.cornerRadius ?? 0
 
   const padding = Math.max(width, height) * 0.15
@@ -39,8 +39,8 @@ export default function SvgPreview({ shape, showGrid }) {
   const arrowSize = fontSize * 0.5
   const strokeW = viewBoxWidth * 0.005
 
-  const typeLabel = type === 'circle' ? 'Koło' : type === 'ellipse' ? 'Elipsa' : (shape.isSquare ? 'Kwadrat' : 'Prostokąt')
-  const hasHoles = (shape.holes?.enabled && shape.holes?.count) && (type === 'rectangle' || type === 'ellipse')
+  const typeLabel = type === 'circle' ? 'Koło' : type === 'ellipse' ? 'Elipsa' : type === 'square' ? 'Kwadrat' : 'Prostokąt'
+  const hasHoles = (shape.holes?.enabled && shape.holes?.count) && (type === 'rectangle' || type === 'square')
 
   return (
     <div className="relative w-full aspect-[4/3] bg-steel-800/30 rounded-lg overflow-hidden border border-steel-700/50">
@@ -64,7 +64,7 @@ export default function SvgPreview({ shape, showGrid }) {
           <path key={i} d={d} fill="none" stroke="#eb6a0c" strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={0.9} />
         ))}
 
-        {type === 'rectangle' && cornerRadius > 0 && (
+        {(type === 'rectangle' || type === 'square') && cornerRadius > 0 && (
           <g stroke="#eb6a0c" strokeWidth={viewBoxWidth * 0.002} opacity={0.4}>
             <line x1={cornerRadius} y1={0} x2={cornerRadius} y2={cornerRadius * 0.3} />
             <line x1={0} y1={cornerRadius} x2={cornerRadius * 0.3} y2={cornerRadius} />
@@ -90,7 +90,7 @@ export default function SvgPreview({ shape, showGrid }) {
           </text>
         </g>
 
-        {type === 'rectangle' && cornerRadius > 0 && (
+        {(type === 'rectangle' || type === 'square') && cornerRadius > 0 && (
           <text x={cornerRadius * 0.7} y={cornerRadius * 0.7} textAnchor="start" fill="#eb6a0c" fontSize={fontSize * 0.8} fontFamily="JetBrains Mono, monospace" opacity={0.7}>
             R{cornerRadius}
           </text>
@@ -106,7 +106,7 @@ export default function SvgPreview({ shape, showGrid }) {
 
       <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
         <span className="badge badge-green text-xs">{typeLabel}</span>
-        {type === 'rectangle' && cornerRadius > 0 && <span className="badge badge-green text-xs">R = {cornerRadius} cm</span>}
+        {(type === 'rectangle' || type === 'square') && cornerRadius > 0 && <span className="badge badge-green text-xs">R = {cornerRadius} cm</span>}
         {hasHoles && <span className="badge badge-green text-xs">Otwory: {shape.holes.count}</span>}
       </div>
     </div>
