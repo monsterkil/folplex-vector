@@ -185,7 +185,7 @@ export default function ShapeForm({ shape, setShape }) {
 
       {/* Otwory – prostokąt i kwadrat */}
       {isRectOrSquare && (
-        <div className="p-2.5 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-2.5">
+        <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <label className="input-label mb-0">Otwory</label>
             <button
