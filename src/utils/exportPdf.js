@@ -45,7 +45,9 @@ export async function exportToPdf(shape, filename) {
 
   pdf.setFontSize(14)
   pdf.setTextColor(0, 0, 0)
-  const titleText = filename ? `Folplex Vector - ${filename}` : 'Folplex Vector'
+  const nrZk = (shape.nrZk || '').trim()
+  const namePart = nrZk || (filename ? filename.replace(/\.pdf$/i, '') : '')
+  const titleText = namePart ? `Folplex Vector - ${namePart}` : 'Folplex Vector'
   pdf.text(pdfText(titleText), margin, margin)
 
   pdf.setFontSize(10)

@@ -67,11 +67,11 @@ export default function ShapeForm({ shape, setShape }) {
   const inputInGroupClass = 'input-field border-0 !rounded-none pr-12 w-full min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30'
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       {/* Typ kształtu */}
       <div>
         <label className="input-label">Kształt</label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1.5">
           {[
             { id: 'rectangle', label: 'Prostokąt' },
             { id: 'square', label: 'Kwadrat' },
@@ -82,7 +82,7 @@ export default function ShapeForm({ shape, setShape }) {
               key={t.id}
               type="button"
               onClick={() => setType(t.id)}
-              className={`p-3 rounded-lg border text-sm font-medium transition-all ${
+              className={`p-2 rounded-lg border text-sm font-medium transition-all ${
                 type === t.id
                   ? 'border-folplex-500 bg-folplex-500/10 text-folplex-400'
                   : 'border-steel-700 bg-steel-800/50 text-steel-400 hover:border-steel-600'
@@ -152,7 +152,7 @@ export default function ShapeForm({ shape, setShape }) {
           <label className="input-label">
             Zaokrąglenie rogów (cm)
           </label>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className={groupClass}>
               <button type="button" className={btnStepClass + ' border-r'} onClick={() => handleChange('cornerRadius', Math.max(0, roundTo((shape.cornerRadius || 0) - stepSmall, 1)))} title="Zmniejsz">−</button>
               <div className="relative flex-1 min-w-0">
@@ -185,7 +185,7 @@ export default function ShapeForm({ shape, setShape }) {
 
       {/* Otwory – prostokąt i kwadrat */}
       {isRectOrSquare && (
-        <div className="p-3 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-3">
+        <div className="p-2 bg-steel-800/50 rounded-lg border border-steel-700/50 space-y-2">
           <div className="flex items-center justify-between">
             <label className="input-label mb-0">Otwory</label>
             <button

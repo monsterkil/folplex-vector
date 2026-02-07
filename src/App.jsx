@@ -180,19 +180,19 @@ export default function App() {
       <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Panel - Form */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="card p-6 animate-fade-in">
+          <div className="lg:col-span-3 space-y-3">
+            <div className="card p-4 animate-fade-in">
               <ShapeForm shape={shape} setShape={setShape} />
             </div>
 
-            <div className="card p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <h2 className="text-lg font-semibold text-steel-200 mb-4 flex items-center gap-2">
+            <div className="card p-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <h2 className="text-lg font-semibold text-steel-200 mb-2 flex items-center gap-2">
                 <svg className="w-5 h-5 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
                 Eksport
               </h2>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="input-label">Nr ZK</label>
                 <input
                   type="text"
@@ -202,7 +202,7 @@ export default function App() {
                   onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label className="input-label">Grubość obrysu (cm)</label>
                 <input
                   type="number"
