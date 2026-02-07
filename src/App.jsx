@@ -177,7 +177,7 @@ export default function App() {
       <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Panel - Form */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <div className="card p-6 animate-fade-in">
               <h2 className="text-lg font-semibold text-steel-200 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -222,7 +222,7 @@ export default function App() {
           </div>
 
           {/* Center Panel - Preview */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-7">
             <div className="card p-6 h-full animate-fade-in" style={{ animationDelay: '0.15s' }}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-steel-200 flex items-center gap-2">
