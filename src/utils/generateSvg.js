@@ -51,9 +51,10 @@ function ellipsePath(shape) {
 
 const MAX_HOLES = 16
 
-/** Evenly distributed angles for n holes (degrees, 0 = right, clockwise) */
+/** Kąty równomiernie (stopnie): pierwszy na górze (12h), dalej zgodnie z zegarem */
 function holeAngles(n) {
-  return Array.from({ length: n }, (_, i) => (360 * i) / n)
+  const startDeg = -90
+  return Array.from({ length: n }, (_, i) => startDeg + (360 * i) / n)
 }
 
 /**
@@ -101,10 +102,23 @@ export function getHolePositions(shape) {
     })
   }
 
-  // rectangle / square: distribute holes along inner perimeter (clockwise from top-left)
+  // rectangle / square
   const { width, height } = shape
   const fx = holes.fromEdgeX ?? 2
   const fy = holes.fromEdgeY ?? 2
+
+  // 1–4 otwory = rogi (lewy górny, prawy górny, prawy dolny, lewy dolny)
+  if (count <= 4) {
+    const corners = [
+      { x: fx, y: fy },
+      { x: width - fx, y: fy },
+      { x: width - fx, y: height - fy },
+      { x: fx, y: height - fy }
+    ]
+    return corners.slice(0, count).map(({ x, y }) => ({ x, y, r }))
+  }
+
+  // 5–16: równomiernie wzdłuż wewnętrznego obwodu (zaczynając od lewego górnego rogu, zgodnie z zegarem)
   const w = Math.max(0, width - 2 * fx)
   const h = Math.max(0, height - 2 * fy)
   const perim = 2 * w + 2 * h
