@@ -85,6 +85,7 @@ export default function App() {
           toast.success('Projekt zaktualizowany')
           setEditingProject(null)
           fetchProjects()
+          setShape(prev => ({ ...prev, nrZk: name }))
         }
       } else {
         // Create new project
@@ -96,6 +97,7 @@ export default function App() {
         if (res.ok) {
           toast.success('Projekt zapisany')
           fetchProjects()
+          setShape(prev => ({ ...prev, nrZk: name }))
         }
       }
       setShowSaveModal(false)
@@ -262,7 +264,7 @@ export default function App() {
         <SaveProjectModal
           onSave={handleSaveProject}
           onClose={() => setShowSaveModal(false)}
-          defaultName={editingProject?.name || ''}
+          defaultName={editingProject?.name || shape.nrZk || ''}
         />
       )}
     </div>
