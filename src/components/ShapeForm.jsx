@@ -62,7 +62,7 @@ export default function ShapeForm({ shape, setShape }) {
   }
   const stepMain = 1
   const stepSmall = 0.1
-  const groupClass = 'flex rounded-md border border-steel-700 overflow-hidden bg-steel-800'
+  const groupClass = 'flex rounded-md border border-steel-700 overflow-hidden bg-steel-800 max-w-[180px]'
   const btnStepClass = 'w-9 flex-shrink-0 flex items-center justify-center bg-steel-800 border-steel-700 text-steel-200 hover:bg-steel-600 font-mono text-lg transition-colors select-none disabled:opacity-40'
   const inputInGroupClass = 'input-field border-0 !rounded-none pr-12 w-full min-w-0 focus:ring-1 focus:ring-inset focus:ring-folplex-500/30'
 
