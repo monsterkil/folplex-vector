@@ -207,11 +207,11 @@ export default function App() {
                 <input
                   type="number"
                   className="input-field max-w-[180px]"
-                  min="0.01"
+                  min="0.001"
                   max="2"
-                  step="0.01"
+                  step="0.001"
                   value={shape.strokeWidth ?? 0.1}
-                  onChange={(e) => setShape(prev => ({ ...prev, strokeWidth: Math.max(0.01, Math.min(2, parseFloat(e.target.value) || 0.1)) }))}
+                  onChange={(e) => setShape(prev => ({ ...prev, strokeWidth: Math.max(0.001, Math.min(2, parseFloat(e.target.value) || 0.1)) }))}
                 />
               </div>
               <ExportButtons shape={shape} />
