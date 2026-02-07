@@ -145,7 +145,7 @@ export default function App() {
           toastOptions={{
             className: 'bg-steel-800 text-steel-100 border border-steel-700',
             duration: 3000,
-            style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' }
+            style: { background: '#25262a', color: '#f0f0f2', border: '1px solid #37383c' }
           }}
         />
         <LoginScreen onLogin={handleLogin} />
@@ -161,9 +161,9 @@ export default function App() {
           className: 'bg-steel-800 text-steel-100 border border-steel-700',
           duration: 3000,
           style: {
-            background: '#1e293b',
-            color: '#f1f5f9',
-            border: '1px solid #334155'
+            background: '#25262a',
+            color: '#f0f0f2',
+            border: '1px solid #37383c'
           }
         }}
       />

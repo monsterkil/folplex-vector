@@ -53,19 +53,19 @@ export default function SvgPreview({ shape, showGrid }) {
 
         {showGrid && (
           <g>
-            <path d={gridLines.minor.join(' ')} stroke="rgba(34, 197, 94, 0.1)" strokeWidth={viewBoxWidth * 0.001} fill="none" />
-            <path d={gridLines.major.join(' ')} stroke="rgba(34, 197, 94, 0.25)" strokeWidth={viewBoxWidth * 0.002} fill="none" />
-            <circle cx={0} cy={0} r={viewBoxWidth * 0.008} fill="#22c55e" opacity={0.5} />
+            <path d={gridLines.minor.join(' ')} stroke="rgba(235, 106, 12, 0.12)" strokeWidth={viewBoxWidth * 0.001} fill="none" />
+            <path d={gridLines.major.join(' ')} stroke="rgba(235, 106, 12, 0.28)" strokeWidth={viewBoxWidth * 0.002} fill="none" />
+            <circle cx={0} cy={0} r={viewBoxWidth * 0.008} fill="#eb6a0c" opacity={0.5} />
           </g>
         )}
 
-        <path d={pathD} fill="none" stroke="#22c55e" strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={pathD} fill="none" stroke="#eb6a0c" strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round" />
         {holePaths.map((d, i) => (
-          <path key={i} d={d} fill="none" stroke="#22c55e" strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={0.9} />
+          <path key={i} d={d} fill="none" stroke="#eb6a0c" strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={0.9} />
         ))}
 
         {type === 'rectangle' && cornerRadius > 0 && (
-          <g stroke="#22c55e" strokeWidth={viewBoxWidth * 0.002} opacity={0.4}>
+          <g stroke="#eb6a0c" strokeWidth={viewBoxWidth * 0.002} opacity={0.4}>
             <line x1={cornerRadius} y1={0} x2={cornerRadius} y2={cornerRadius * 0.3} />
             <line x1={0} y1={cornerRadius} x2={cornerRadius * 0.3} y2={cornerRadius} />
             <line x1={width - cornerRadius} y1={0} x2={width - cornerRadius} y2={cornerRadius * 0.3} />
@@ -78,29 +78,29 @@ export default function SvgPreview({ shape, showGrid }) {
         )}
 
         <g className="dimension-width">
-          <line x1={0} y1={height + padding * 0.4} x2={width} y2={height + padding * 0.4} stroke="#94a3b8" strokeWidth={viewBoxWidth * 0.002} markerStart="url(#arrowLeft)" markerEnd="url(#arrowRight)" />
-          <text x={width / 2} y={height + padding * 0.4 + fontSize * 1.2} textAnchor="middle" fill="#94a3b8" fontSize={fontSize} fontFamily="JetBrains Mono, monospace">
+          <line x1={0} y1={height + padding * 0.4} x2={width} y2={height + padding * 0.4} stroke="#a2a2a4" strokeWidth={viewBoxWidth * 0.002} markerStart="url(#arrowLeft)" markerEnd="url(#arrowRight)" />
+          <text x={width / 2} y={height + padding * 0.4 + fontSize * 1.2} textAnchor="middle" fill="#a2a2a4" fontSize={fontSize} fontFamily="JetBrains Mono, monospace">
             {width} cm
           </text>
         </g>
         <g className="dimension-height">
-          <line x1={width + padding * 0.4} y1={0} x2={width + padding * 0.4} y2={height} stroke="#94a3b8" strokeWidth={viewBoxWidth * 0.002} markerStart="url(#arrowUp)" markerEnd="url(#arrowDown)" />
-          <text x={width + padding * 0.4 + fontSize * 0.5} y={height / 2} textAnchor="start" dominantBaseline="middle" fill="#94a3b8" fontSize={fontSize} fontFamily="JetBrains Mono, monospace" transform={`rotate(90, ${width + padding * 0.4 + fontSize * 0.5}, ${height / 2})`}>
+          <line x1={width + padding * 0.4} y1={0} x2={width + padding * 0.4} y2={height} stroke="#a2a2a4" strokeWidth={viewBoxWidth * 0.002} markerStart="url(#arrowUp)" markerEnd="url(#arrowDown)" />
+          <text x={width + padding * 0.4 + fontSize * 0.5} y={height / 2} textAnchor="start" dominantBaseline="middle" fill="#a2a2a4" fontSize={fontSize} fontFamily="JetBrains Mono, monospace" transform={`rotate(90, ${width + padding * 0.4 + fontSize * 0.5}, ${height / 2})`}>
             {height} cm
           </text>
         </g>
 
         {type === 'rectangle' && cornerRadius > 0 && (
-          <text x={cornerRadius * 0.7} y={cornerRadius * 0.7} textAnchor="start" fill="#22c55e" fontSize={fontSize * 0.8} fontFamily="JetBrains Mono, monospace" opacity={0.7}>
+          <text x={cornerRadius * 0.7} y={cornerRadius * 0.7} textAnchor="start" fill="#eb6a0c" fontSize={fontSize * 0.8} fontFamily="JetBrains Mono, monospace" opacity={0.7}>
             R{cornerRadius}
           </text>
         )}
 
         <defs>
-          <marker id="arrowLeft" viewBox="0 0 10 10" refX="0" refY="5" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M10,0 L0,5 L10,10" fill="none" stroke="#94a3b8" strokeWidth="1.5" /></marker>
-          <marker id="arrowRight" viewBox="0 0 10 10" refX="10" refY="5" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#94a3b8" strokeWidth="1.5" /></marker>
-          <marker id="arrowUp" viewBox="0 0 10 10" refX="5" refY="0" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M0,10 L5,0 L10,10" fill="none" stroke="#94a3b8" strokeWidth="1.5" /></marker>
-          <marker id="arrowDown" viewBox="0 0 10 10" refX="5" refY="10" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M0,0 L5,10 L10,0" fill="none" stroke="#94a3b8" strokeWidth="1.5" /></marker>
+          <marker id="arrowLeft" viewBox="0 0 10 10" refX="0" refY="5" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M10,0 L0,5 L10,10" fill="none" stroke="#a2a2a4" strokeWidth="1.5" /></marker>
+          <marker id="arrowRight" viewBox="0 0 10 10" refX="10" refY="5" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#a2a2a4" strokeWidth="1.5" /></marker>
+          <marker id="arrowUp" viewBox="0 0 10 10" refX="5" refY="0" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M0,10 L5,0 L10,10" fill="none" stroke="#a2a2a4" strokeWidth="1.5" /></marker>
+          <marker id="arrowDown" viewBox="0 0 10 10" refX="5" refY="10" markerWidth={arrowSize} markerHeight={arrowSize} orient="auto"><path d="M0,0 L5,10 L10,0" fill="none" stroke="#a2a2a4" strokeWidth="1.5" /></marker>
         </defs>
       </svg>
 
