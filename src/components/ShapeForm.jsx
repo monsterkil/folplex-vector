@@ -10,8 +10,8 @@ export default function ShapeForm({ shape, setShape }) {
         base.cornerRadius = 0
         base.holes = { ...(prev.holes || {}), enabled: false }
       } else if (newType === 'ellipse') {
-        base.width = prev.width || 20
-        base.height = prev.height || 15
+        base.width = prev.width || 40
+        base.height = prev.height || 20
         base.cornerRadius = 0
         base.holes = { ...(prev.holes || {}), enabled: false }
       } else if (newType === 'square') {
@@ -168,9 +168,9 @@ export default function ShapeForm({ shape, setShape }) {
             <button
               type="button"
               onClick={() => handleHolesChange('enabled', !holes.enabled)}
-              className={`relative w-12 h-6 rounded-full transition-colors ${holes.enabled ? 'bg-folplex-600' : 'bg-steel-700'}`}
+              className={`relative w-12 h-6 rounded-full transition-colors overflow-hidden ${holes.enabled ? 'bg-folplex-600' : 'bg-steel-700'}`}
             >
-              <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${holes.enabled ? 'translate-x-7' : 'translate-x-1'}`} />
+              <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${holes.enabled ? 'translate-x-6' : 'translate-x-0'}`} />
             </button>
           </div>
           {holes.enabled && (

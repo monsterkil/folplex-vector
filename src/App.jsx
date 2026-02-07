@@ -243,13 +243,13 @@ export default function App() {
                 <span className="text-steel-300 text-sm">Pokaż siatkę</span>
                 <button
                   onClick={() => setShowGrid(!showGrid)}
-                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 overflow-hidden ${
                     showGrid ? 'bg-folplex-600' : 'bg-steel-700'
                   }`}
                 >
                   <span
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
-                      showGrid ? 'translate-x-7' : 'translate-x-1'
+                    className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
+                      showGrid ? 'translate-x-6' : 'translate-x-0'
                     }`}
                   />
                 </button>
