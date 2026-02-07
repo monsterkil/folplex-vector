@@ -56,17 +56,19 @@ function holeAngles(n) {
 }
 
 const MAX_HOLES_CIRCLE = 16
+const MAX_HOLES_RECT = 8
 
 /**
- * Hole positions: circle 1–16 (na obwodzie), prostokąt/kwadrat/elipsa 1–4 (rogi / kardynalnie).
+ * Hole positions: circle 1–16, prostokąt/kwadrat 1–8 (rogi + środki krawędzi), elipsa 1–4.
  */
 export function getHolePositions(shape) {
   const holes = shape.holes || {}
   if (!holes.enabled || !holes.count) return []
   const type = shape.type || 'rectangle'
   const countCircle = Math.min(MAX_HOLES_CIRCLE, Math.max(1, holes.count || 1))
-  const countRest = Math.min(4, Math.max(1, holes.count || 1))
-  const count = type === 'circle' ? countCircle : countRest
+  const countRect = Math.min(MAX_HOLES_RECT, Math.max(1, holes.count || 1))
+  const countEllipse = Math.min(4, Math.max(1, holes.count || 1))
+  const count = type === 'circle' ? countCircle : (type === 'rectangle' || type === 'square' ? countRect : countEllipse)
   const d = holes.diameter ?? 0.6
   const r = d / 2
 
@@ -104,17 +106,23 @@ export function getHolePositions(shape) {
     })
   }
 
-  // rectangle / square: 1–4 rogi (lewy górny, prawy górny, prawy dolny, lewy dolny)
+  // rectangle / square: 1–8 = rogi + środki krawędzi (zgodnie z zegarem od lewego górnego)
   const { width, height } = shape
   const fx = holes.fromEdgeX ?? 2
   const fy = holes.fromEdgeY ?? 2
-  const corners = [
+  const cx = width / 2
+  const cy = height / 2
+  const positions = [
     { x: fx, y: fy },
+    { x: cx, y: fy },
     { x: width - fx, y: fy },
+    { x: width - fx, y: cy },
     { x: width - fx, y: height - fy },
-    { x: fx, y: height - fy }
+    { x: cx, y: height - fy },
+    { x: fx, y: height - fy },
+    { x: fx, y: cy }
   ]
-  return corners.slice(0, count).map(({ x, y }) => ({ x, y, r }))
+  return positions.slice(0, count).map(({ x, y }) => ({ x, y, r }))
 }
 
 /** Hole circle: (x, y) = center of hole, r = radius */
