@@ -7,6 +7,7 @@ import ProjectList from './components/ProjectList'
 import Header from './components/Header'
 import SaveProjectModal from './components/SaveProjectModal'
 import LoginScreen from './components/LoginScreen'
+import { generateSvgFile, downloadFile, getExportFilename } from './utils/generateSvg'
 
 const AUTH_KEY = 'folplex_user'
 
@@ -218,14 +219,32 @@ export default function App() {
             </div>
 
             <button
-              onClick={() => setShowSaveModal(true)}
-              className="btn btn-primary w-full animate-fade-in text-sm py-2"
+              type="button"
+              onClick={() => {
+                try {
+                  const svgContent = generateSvgFile(shape)
+                  const filename = getExportFilename(shape, 'svg')
+                  downloadFile(svgContent, filename, 'image/svg+xml')
+                  toast.success('Plik pobrany')
+                } catch (err) {
+                  toast.error('Błąd pobierania pliku')
+                  console.error(err)
+                }
+              }}
+              className="btn btn-primary w-full animate-fade-in py-3 min-h-[44px]"
               style={{ animationDelay: '0.3s' }}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
               </svg>
               Pobierz plik
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowSaveModal(true)}
+              className="btn btn-ghost w-full text-steel-400 hover:text-steel-200 text-sm py-2"
+            >
+              Zapisz projekt
             </button>
           </div>
 

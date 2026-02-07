@@ -1,17 +1,6 @@
-import { generateSvgFile, downloadFile } from '../utils/generateSvg'
+import { generateSvgFile, downloadFile, getExportFilename } from '../utils/generateSvg'
 import { exportToPdf } from '../utils/exportPdf'
 import { toast } from 'react-hot-toast'
-
-function getExportFilename(shape, ext) {
-  const base = (shape.nrZk || '').trim()
-  const safe = base.replace(/[^\w\-_.]/g, '_').slice(0, 80) || null
-  const type = shape.type || 'rectangle'
-  const w = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.width || 20)
-  const h = type === 'circle' || type === 'square' ? (shape.width || 10) : (shape.height || 15)
-  const fallback = `folplex-${w}x${h}cm`
-  const name = safe || fallback
-  return `${name}.${ext}`
-}
 
 export default function ExportButtons({ shape }) {
   const handleExportSvg = () => {
