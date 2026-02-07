@@ -192,7 +192,7 @@ export default function App() {
                 Eksport
               </h2>
               <div className="mb-4">
-                <label className="input-label">Nr ZK (nazwa pliku)</label>
+                <label className="input-label">Nr ZK</label>
                 <input
                   type="text"
                   className="input-field"
