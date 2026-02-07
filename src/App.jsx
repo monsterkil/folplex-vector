@@ -218,20 +218,6 @@ export default function App() {
           {/* Center Panel - Preview */}
           <div className="lg:col-span-7">
             <div className="card p-6 h-full animate-fade-in" style={{ animationDelay: '0.15s' }}>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-steel-200 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Podgląd
-                </h2>
-                <span className="badge badge-green">
-                  {shape.type === 'circle'
-                    ? `Ø ${shape.width ?? 10} cm`
-                    : (shape.type === 'square' ? `${shape.width ?? 10} × ${shape.width ?? 10} cm` : `${shape.width ?? 20} × ${shape.height ?? 15} cm`)}
-                </span>
-              </div>
               <SvgPreview shape={shape} showGrid={showGrid} />
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-steel-800">
                 <span className="text-steel-300 text-sm">Pokaż siatkę</span>
