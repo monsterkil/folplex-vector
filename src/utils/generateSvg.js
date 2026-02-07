@@ -49,22 +49,24 @@ function ellipsePath(shape) {
   return `M ${cx + rx},${cy} A ${rx},${ry} 0 1 1 ${cx - rx},${cy} A ${rx},${ry} 0 1 1 ${cx + rx},${cy}`
 }
 
-const MAX_HOLES = 16
-
 /** Kąty równomiernie (stopnie): pierwszy na górze (12h), dalej zgodnie z zegarem */
 function holeAngles(n) {
   const startDeg = -90
   return Array.from({ length: n }, (_, i) => startDeg + (360 * i) / n)
 }
 
+const MAX_HOLES_CIRCLE = 16
+
 /**
- * Hole positions for rectangle/square (along inner perimeter), circle and ellipse (on perimeter).
+ * Hole positions: circle 1–16 (na obwodzie), prostokąt/kwadrat/elipsa 1–4 (rogi / kardynalnie).
  */
 export function getHolePositions(shape) {
   const holes = shape.holes || {}
   if (!holes.enabled || !holes.count) return []
   const type = shape.type || 'rectangle'
-  const count = Math.min(MAX_HOLES, Math.max(1, holes.count || 1))
+  const countCircle = Math.min(MAX_HOLES_CIRCLE, Math.max(1, holes.count || 1))
+  const countRest = Math.min(4, Math.max(1, holes.count || 1))
+  const count = type === 'circle' ? countCircle : countRest
   const d = holes.diameter ?? 0.6
   const r = d / 2
 
@@ -102,47 +104,17 @@ export function getHolePositions(shape) {
     })
   }
 
-  // rectangle / square
+  // rectangle / square: 1–4 rogi (lewy górny, prawy górny, prawy dolny, lewy dolny)
   const { width, height } = shape
   const fx = holes.fromEdgeX ?? 2
   const fy = holes.fromEdgeY ?? 2
-
-  // 1–4 otwory = rogi (lewy górny, prawy górny, prawy dolny, lewy dolny)
-  if (count <= 4) {
-    const corners = [
-      { x: fx, y: fy },
-      { x: width - fx, y: fy },
-      { x: width - fx, y: height - fy },
-      { x: fx, y: height - fy }
-    ]
-    return corners.slice(0, count).map(({ x, y }) => ({ x, y, r }))
-  }
-
-  // 5–16: równomiernie wzdłuż wewnętrznego obwodu (zaczynając od lewego górnego rogu, zgodnie z zegarem)
-  const w = Math.max(0, width - 2 * fx)
-  const h = Math.max(0, height - 2 * fy)
-  const perim = 2 * w + 2 * h
-  if (perim <= 0) return []
-  const positions = []
-  for (let i = 0; i < count; i++) {
-    const p = (i * perim) / count
-    let x, y
-    if (p < w) {
-      x = fx + p
-      y = fy
-    } else if (p < w + h) {
-      x = width - fx
-      y = fy + (p - w)
-    } else if (p < 2 * w + h) {
-      x = width - fx - (p - w - h)
-      y = height - fy
-    } else {
-      x = fx
-      y = height - fy - (p - 2 * w - h)
-    }
-    positions.push({ x, y, r })
-  }
-  return positions
+  const corners = [
+    { x: fx, y: fy },
+    { x: width - fx, y: fy },
+    { x: width - fx, y: height - fy },
+    { x: fx, y: height - fy }
+  ]
+  return corners.slice(0, count).map(({ x, y }) => ({ x, y, r }))
 }
 
 /** Hole circle: (x, y) = center of hole, r = radius */

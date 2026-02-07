@@ -44,7 +44,7 @@ export default function ShapeForm({ shape, setShape }) {
 
   const handleHolesChange = (field, value) => {
     let numValue = field === 'enabled' || field === 'count' ? (field === 'enabled' ? !!value : (parseInt(value, 10) || 0)) : (parseFloat(value) || 0)
-    if (field === 'count') numValue = Math.min(16, Math.max(1, numValue))
+    if (field === 'count') numValue = type === 'circle' ? Math.min(16, Math.max(1, numValue)) : Math.min(4, Math.max(1, numValue))
     setShape(prev => ({
       ...prev,
       holes: { ...(prev.holes || {}), [field]: numValue }
@@ -201,13 +201,13 @@ export default function ShapeForm({ shape, setShape }) {
           {holes.enabled && (
             <>
               <div>
-                <label className="input-label text-xs">Ilość (1–16, np. 4 rogi)</label>
+                <label className="input-label text-xs">{type === 'circle' ? 'Ilość (1–16)' : 'Ilość (1–4, np. 4 rogi)'}</label>
                 <select
-                  value={holes.count ?? 4}
+                  value={type === 'circle' ? (holes.count ?? 4) : Math.min(4, holes.count ?? 4)}
                   onChange={(e) => handleHolesChange('count', e.target.value)}
                   className="input-field"
                 >
-                  {Array.from({ length: 16 }, (_, i) => i + 1).map(n => (
+                  {(type === 'circle' ? Array.from({ length: 16 }, (_, i) => i + 1) : [1, 2, 3, 4]).map(n => (
                     <option key={n} value={n}>{n}</option>
                   ))}
                 </select>
