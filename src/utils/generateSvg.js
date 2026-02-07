@@ -56,7 +56,6 @@ function holeAngles(n) {
 }
 
 const MAX_HOLES_CIRCLE = 16
-const MAX_HOLES_RECT = 8
 
 /**
  * Hole positions: circle 1–16, prostokąt/kwadrat 1–8 (rogi + środki krawędzi), elipsa 1–4.
@@ -66,7 +65,8 @@ export function getHolePositions(shape) {
   if (!holes.enabled || !holes.count) return []
   const type = shape.type || 'rectangle'
   const countCircle = Math.min(MAX_HOLES_CIRCLE, Math.max(1, holes.count || 1))
-  const countRect = Math.min(MAX_HOLES_RECT, Math.max(1, holes.count || 1))
+  const rawRect = Math.max(1, holes.count || 1)
+  const countRect = [1, 2, 3, 4, 8].includes(rawRect) ? rawRect : (rawRect > 4 ? 8 : Math.min(4, rawRect))
   const countEllipse = Math.min(4, Math.max(1, holes.count || 1))
   const count = type === 'circle' ? countCircle : (type === 'rectangle' || type === 'square' ? countRect : countEllipse)
   const d = holes.diameter ?? 0.6
@@ -106,23 +106,24 @@ export function getHolePositions(shape) {
     })
   }
 
-  // rectangle / square: 1–8 = rogi + środki krawędzi (zgodnie z zegarem od lewego górnego)
+  // rectangle / square: 1–4 = rogi (jak wcześniej), 8 = rogi + środki krawędzi
   const { width, height } = shape
   const fx = holes.fromEdgeX ?? 2
   const fy = holes.fromEdgeY ?? 2
+  const corners = [
+    { x: fx, y: fy },
+    { x: width - fx, y: fy },
+    { x: width - fx, y: height - fy },
+    { x: fx, y: height - fy }
+  ]
+  if (count <= 4) return corners.slice(0, count).map(({ x, y }) => ({ x, y, r }))
   const cx = width / 2
   const cy = height / 2
-  const positions = [
-    { x: fx, y: fy },
-    { x: cx, y: fy },
-    { x: width - fx, y: fy },
-    { x: width - fx, y: cy },
-    { x: width - fx, y: height - fy },
-    { x: cx, y: height - fy },
-    { x: fx, y: height - fy },
-    { x: fx, y: cy }
+  const eight = [
+    corners[0], { x: cx, y: fy }, corners[1], { x: width - fx, y: cy },
+    corners[2], { x: cx, y: height - fy }, corners[3], { x: fx, y: cy }
   ]
-  return positions.slice(0, count).map(({ x, y }) => ({ x, y, r }))
+  return eight.map(({ x, y }) => ({ x, y, r }))
 }
 
 /** Hole circle: (x, y) = center of hole, r = radius */
