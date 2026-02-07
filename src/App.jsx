@@ -155,7 +155,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-steel-950 noise-overlay">
+    <div className="min-h-screen bg-steel-950 noise-overlay overflow-x-hidden">
       <Toaster 
         position="top-right"
         toastOptions={{

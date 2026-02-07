@@ -13,11 +13,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   @apply bg-steel-950 text-steel-100 antialiased;
   font-family: 'Space Grotesk', system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar */
