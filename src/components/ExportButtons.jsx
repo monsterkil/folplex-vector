@@ -67,10 +67,6 @@ export default function ExportButtons({ shape }) {
         Pobierz PDF
         <span className="ml-auto text-xs text-steel-500 font-mono">A4</span>
       </button>
-
-      <p className="text-xs text-steel-500 text-center pt-2">
-        Pliki są generowane w skali 1:1 (cm)
-      </p>
     </div>
   )
 }

@@ -196,7 +196,7 @@ export default function App() {
                 <label className="input-label">Nr ZK</label>
                 <input
                   type="text"
-                  className="input-field"
+                  className="input-field placeholder:opacity-50"
                   placeholder="np. 1050_INT"
                   value={shape.nrZk ?? ''}
                   onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
