@@ -46,8 +46,7 @@ export async function exportToPdf(shape, filename) {
   pdf.setFontSize(14)
   pdf.setTextColor(0, 0, 0)
   const nrZk = (shape.nrZk || '').trim()
-  const namePart = nrZk || (filename ? filename.replace(/\.pdf$/i, '') : '')
-  const titleText = namePart ? `Folplex Vector - ${namePart}` : 'Folplex Vector'
+  const titleText = nrZk ? `Folplex Vector - ${nrZk}` : 'Folplex Vector'
   pdf.text(pdfText(titleText), margin, margin)
 
   pdf.setFontSize(10)
@@ -83,16 +82,14 @@ export async function exportToPdf(shape, filename) {
     }
   }
 
-  // Holes (rectangle and square)
-  if (type === 'rectangle' || type === 'square') {
-    const holes = getHolePositions(shape)
-    holes.forEach(({ x, y, r }) => {
-      const cx = offsetX + x * 10 * scale
-      const cy = offsetY + y * 10 * scale
-      const sr = r * 10 * scale
-      pdf.ellipse(cx, cy, sr, sr, 'S')
-    })
-  }
+  // Holes (rectangle, square, circle, ellipse)
+  const holes = getHolePositions(shape)
+  holes.forEach(({ x, y, r }) => {
+    const cx = offsetX + x * 10 * scale
+    const cy = offsetY + y * 10 * scale
+    const sr = r * 10 * scale
+    pdf.ellipse(cx, cy, sr, sr, 'S')
+  })
 
   pdf.setFontSize(8)
   pdf.setTextColor(100, 100, 100)

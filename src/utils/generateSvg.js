@@ -49,26 +49,69 @@ function ellipsePath(shape) {
   return `M ${cx + rx},${cy} A ${rx},${ry} 0 1 1 ${cx - rx},${cy} A ${rx},${ry} 0 1 1 ${cx + rx},${cy}`
 }
 
+/** Angles (degrees) for 1–4 holes: right, then evenly or cardinal */
+const HOLE_ANGLES = {
+  1: [0],
+  2: [0, 180],
+  3: [0, 120, 240],
+  4: [0, 90, 180, 270]
+}
+
 /**
- * Hole positions for rectangle (4 corners: fromEdgeX, fromEdgeY from each edge)
+ * Hole positions for rectangle (4 corners), circle and ellipse (on perimeter).
  */
 export function getHolePositions(shape) {
   const holes = shape.holes || {}
   if (!holes.enabled || !holes.count) return []
+  const type = shape.type || 'rectangle'
+  const count = Math.min(4, Math.max(1, holes.count || 1))
+  const d = holes.diameter ?? 0.6
+  const r = d / 2
+
+  if (type === 'circle') {
+    const width = shape.width || 10
+    const R = width / 2
+    const cx = R
+    const cy = R
+    const fromEdge = holes.fromEdgeX ?? 2
+    const holeRadius = Math.max(0, R - fromEdge)
+    const angles = HOLE_ANGLES[count] || HOLE_ANGLES[4]
+    return angles.slice(0, count).map((deg) => {
+      const rad = (deg * Math.PI) / 180
+      const x = cx + holeRadius * Math.cos(rad)
+      const y = cy + holeRadius * Math.sin(rad)
+      return { x, y, r }
+    })
+  }
+
+  if (type === 'ellipse') {
+    const w = shape.width || 20
+    const h = shape.height || 15
+    const rx = w / 2
+    const ry = h / 2
+    const cx = rx
+    const cy = ry
+    const fx = holes.fromEdgeX ?? 2
+    const fy = holes.fromEdgeY ?? 2
+    const angles = HOLE_ANGLES[count] || HOLE_ANGLES[4]
+    return angles.slice(0, count).map((deg) => {
+      const rad = (deg * Math.PI) / 180
+      const x = cx + (rx - fx) * Math.cos(rad)
+      const y = cy + (ry - fy) * Math.sin(rad)
+      return { x, y, r }
+    })
+  }
+
+  // rectangle / square
   const { width, height } = shape
   const fx = holes.fromEdgeX ?? 2
   const fy = holes.fromEdgeY ?? 2
-  const d = holes.diameter ?? 0.6
-  const r = d / 2
   const positions = []
-
-  // 4 corners: top-left, top-right, bottom-right, bottom-left
-  if (holes.count >= 1) positions.push({ x: fx, y: fy, r })
-  if (holes.count >= 2) positions.push({ x: width - fx, y: fy, r })
-  if (holes.count >= 3) positions.push({ x: width - fx, y: height - fy, r })
-  if (holes.count >= 4) positions.push({ x: fx, y: height - fy, r })
-
-  return positions.slice(0, holes.count)
+  if (count >= 1) positions.push({ x: fx, y: fy, r })
+  if (count >= 2) positions.push({ x: width - fx, y: fy, r })
+  if (count >= 3) positions.push({ x: width - fx, y: height - fy, r })
+  if (count >= 4) positions.push({ x: fx, y: height - fy, r })
+  return positions.slice(0, count)
 }
 
 /** Hole circle: (x, y) = center of hole, r = radius */
@@ -93,7 +136,7 @@ export function generateSvgPath(shape) {
     main = rectanglePath(shape)
   }
 
-  const holes = (shape.type === 'rectangle' || shape.type === 'square') ? getHolePositions(shape) : []
+  const holes = getHolePositions(shape)
   const holePaths = holes.map(({ x, y, r }) => holePathString(x, y, r))
 
   return { main, holePaths }

@@ -51,6 +51,7 @@ export default function ShapeForm({ shape, setShape }) {
   }
 
   const isRectOrSquare = type === 'rectangle' || type === 'square'
+  const hasHolesOption = type === 'rectangle' || type === 'square' || type === 'circle' || type === 'ellipse'
   const maxCornerRadius = isRectOrSquare ? Math.min(shape.width, shape.height) / 2 : 0
   const holes = shape.holes || { enabled: false, fromEdgeX: 2, fromEdgeY: 2, diameter: 0.6, count: 4 }
 
@@ -183,8 +184,8 @@ export default function ShapeForm({ shape, setShape }) {
         </div>
       )}
 
-      {/* Otwory – prostokąt i kwadrat */}
-      {isRectOrSquare && (
+      {/* Otwory – prostokąt, kwadrat, koło, elipsa */}
+      {hasHolesOption && (
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <label className="input-label mb-0">Otwory</label>

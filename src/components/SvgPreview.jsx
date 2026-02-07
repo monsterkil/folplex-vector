@@ -40,7 +40,7 @@ export default function SvgPreview({ shape, showGrid }) {
   const strokeW = shape.strokeWidth ?? 0.1
 
   const typeLabel = type === 'circle' ? 'Koło' : type === 'ellipse' ? 'Elipsa' : type === 'square' ? 'Kwadrat' : 'Prostokąt'
-  const hasHoles = (shape.holes?.enabled && shape.holes?.count) && (type === 'rectangle' || type === 'square')
+  const hasHoles = (shape.holes?.enabled && shape.holes?.count) && (type === 'rectangle' || type === 'square' || type === 'circle' || type === 'ellipse')
 
   return (
     <div className="relative w-full aspect-[4/3] bg-steel-800/30 rounded-lg overflow-hidden">
