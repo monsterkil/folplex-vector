@@ -178,78 +178,45 @@ export default function App() {
         editingProject={editingProject}
       />
 
-      <main className="container mx-auto px-4 py-8 relative z-10">
+      <main className="container mx-auto px-4 py-8 pb-24 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Panel - Form */}
-          <div className="lg:col-span-3 flex flex-col lg:max-h-[calc(100vh-6rem)] sidebar-panel">
-            <div className="flex-1 min-h-0 overflow-y-auto space-y-4">
-              <div className="card p-5 animate-fade-in">
-                <ShapeForm shape={shape} setShape={setShape} />
-              </div>
-
-              <div className="card p-5 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                <h2 className="text-base font-semibold text-steel-200 mb-3 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Eksport
-                </h2>
-                <div className="mb-3">
-                  <label className="input-label">Nr ZK</label>
-                  <input
-                    type="text"
-                    className="input-field placeholder:opacity-50"
-                    placeholder="np. 1050_INT"
-                    value={shape.nrZk ?? ''}
-                    onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="input-label">Grubość obrysu (cm)</label>
-                  <input
-                    type="number"
-                    className="input-field max-w-[180px]"
-                    min="0.001"
-                    max="2"
-                    step="0.001"
-                    value={shape.strokeWidth ?? 0.1}
-                    onChange={(e) => setShape(prev => ({ ...prev, strokeWidth: Math.max(0.001, Math.min(2, parseFloat(e.target.value) || 0.1)) }))}
-                  />
-                </div>
-                <ExportButtons shape={shape} />
-              </div>
+          <div className="lg:col-span-3 space-y-4 sidebar-panel">
+            <div className="card p-5 animate-fade-in">
+              <ShapeForm shape={shape} setShape={setShape} />
             </div>
 
-            <div className="shrink-0 pt-2 pb-1 bg-steel-950 z-10 border-t border-steel-800/50">
-              <button
-                type="button"
-                onClick={() => {
-                  try {
-                    const svgContent = generateSvgFile(shape)
-                    const filename = getExportFilename(shape, 'svg')
-                    downloadFile(svgContent, filename, 'image/svg+xml')
-                    toast.success('Plik pobrany')
-                  } catch (err) {
-                    toast.error('Błąd pobierania pliku')
-                    console.error(err)
-                  }
-                }}
-                className="btn btn-primary w-full animate-fade-in py-3 min-h-[44px]"
-                style={{ animationDelay: '0.3s' }}
-              >
-                <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            <div className="card p-5 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <h2 className="text-base font-semibold text-steel-200 mb-3 flex items-center gap-2">
+                <svg className="w-4 h-4 text-folplex-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                Pobierz plik
-              </button>
+                Eksport
+              </h2>
+              <div className="mb-3">
+                <label className="input-label">Nr ZK</label>
+                <input
+                  type="text"
+                  className="input-field max-w-[180px] placeholder:opacity-50"
+                  placeholder="np. 1050_INT"
+                  value={shape.nrZk ?? ''}
+                  onChange={(e) => setShape(prev => ({ ...prev, nrZk: e.target.value.trim() }))}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="input-label">Grubość obrysu (cm)</label>
+                <input
+                  type="number"
+                  className="input-field max-w-[180px]"
+                  min="0.001"
+                  max="2"
+                  step="0.001"
+                  value={shape.strokeWidth ?? 0.1}
+                  onChange={(e) => setShape(prev => ({ ...prev, strokeWidth: Math.max(0.001, Math.min(2, parseFloat(e.target.value) || 0.1)) }))}
+                />
+              </div>
+              <ExportButtons shape={shape} />
             </div>
-            <button
-              type="button"
-              onClick={() => setShowSaveModal(true)}
-              className="hidden btn btn-ghost w-full text-steel-400 hover:text-steel-200 text-sm py-2"
-            >
-              Zapisz projekt
-            </button>
           </div>
 
           {/* Center Panel - Preview */}
@@ -294,6 +261,29 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      <div className="fixed bottom-0 left-0 right-0 z-20 py-3 bg-steel-950 border-t border-steel-800 flex justify-center">
+        <button
+          type="button"
+          onClick={() => {
+            try {
+              const svgContent = generateSvgFile(shape)
+              const filename = getExportFilename(shape, 'svg')
+              downloadFile(svgContent, filename, 'image/svg+xml')
+              toast.success('Plik pobrany')
+            } catch (err) {
+              toast.error('Błąd pobierania pliku')
+              console.error(err)
+            }
+          }}
+          className="btn btn-primary px-8 py-3 min-h-[44px]"
+        >
+          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+          </svg>
+          Pobierz plik
+        </button>
+      </div>
 
       {showSaveModal && (
         <SaveProjectModal
