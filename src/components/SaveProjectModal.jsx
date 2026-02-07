@@ -37,7 +37,7 @@ export default function SaveProjectModal({ onSave, onClose, defaultName }) {
       <div className="relative card p-6 w-full max-w-md animate-fade-in">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-steel-100">
-            {defaultName ? 'Aktualizuj projekt' : 'Zapisz projekt'}
+            Pobierz plik
           </h2>
           <button
             onClick={onClose}
@@ -82,7 +82,7 @@ export default function SaveProjectModal({ onSave, onClose, defaultName }) {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              Zapisz
+              Pobierz
             </button>
           </div>
         </form>
